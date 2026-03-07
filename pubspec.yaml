@@ -5,28 +5,35 @@ publish_to: 'none'
 version: 1.0.0+1
 
 environment:
-  sdk: ^3.11.1
+  sdk: '>=3.11.1 <4.0.0' # Sửa lại định dạng chuẩn cho SDK
 
 dependencies:
   flutter:
     sdk: flutter
-  http: ^1.2.0
   cupertino_icons: ^1.0.8
-  audioplayers: ^6.6.0
-  confetti: ^0.8.0
+
+  # Bộ Firebase ổn định nhất cho iOS 18
+  firebase_core: ^3.10.1
+  firebase_database: ^11.3.1
+  firebase_messaging: any
+  shared_preferences: ^2.3.2
+  
+  # Các thư viện khác
+  audioplayers: ^6.1.0
+  confetti: ^0.7.0
+  http: ^1.2.2
+  flutter_local_notifications: ^17.2.2
+  url_launcher: ^6.3.1
+ 
+  
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^6.0.0
-  
+  flutter_lints: ^3.0.0 # Thấp xuống chút để không bị lỗi build trên bản web
 
 flutter:
   uses-material-design: true
 
-  # PHẦN THÊM HÌNH NỀN CỦA BẠN Ở ĐÂY
   assets:
     - assets/
-    - assets/background.jpg
-    - assets/hello.mp3
-    - assets/sleep.mp3
