@@ -1,29 +1,24 @@
-name: heart_app
-description: "Trạm Sạc Cẩm Tú Cầu - Phiên bản iOS 18 Special Edition"
+name: love_station
+description: "Trạm Sạc Tình Yêu cho Gấu và Bé Trắng"
 publish_to: 'none'
+
 version: 1.0.0+1
 
 environment:
-  sdk: '>=3.1.0 <4.0.0'
+  sdk: '>=3.2.0 <4.0.0'
 
 dependencies:
   flutter:
     sdk: flutter
-  cupertino_icons: ^1.0.8
-
-  # --- CỐT LÕI FIREBASE (Online Status & Messages) ---
-  firebase_core: ^3.1.1
-  firebase_database: ^11.0.2
-  
-  # --- ÂM THANH & HIỆU ỨNG ---
-  audioplayers: ^6.1.0
+  # Các gói cần thiết để chạy tính năng âm thanh, database và hiệu ứng
+  audioplayers: ^5.2.1
+  firebase_core: ^2.24.0
+  firebase_database: ^10.4.0
   confetti: ^0.7.0
-  
-  # --- TIỆN ÍCH ---
-  http: ^1.2.2
-  intl: ^0.19.0 # Dùng để định dạng thời gian trong Box Chat
-  shared_preferences: ^2.2.3
-
+  cupertino_icons: ^1.0.6
+  shared_preferences: ^2.2.2
+  marquee: ^2.2.3
+  vibration: ^2.0.1  # Thêm dòng này để điều khiển rung
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -32,13 +27,6 @@ dev_dependencies:
 flutter:
   uses-material-design: true
 
-  # --- KHAI BÁO TOÀN BỘ TÀI NGUYÊN ---
   assets:
+    # Hình ảnh nền và avatar
     - assets/
-    # Lưu ý: Chỉ cần khai báo thư mục assets/ là Flutter sẽ tự nhận hết file bên trong.
-    # Nhưng ông PHẢI đảm bảo các file sau đã nằm trong thư mục đó:
-    # 1. Ảnh nền: background.jpg
-    # 2. Cẩm tú cầu: hydrangea_left.png, hydrangea_right.png
-    # 3. Avatar: be_trang.png, gau_bong.png
-    # 4. Thông báo: notification.png, notification.mp3
-    # 5. Bộ Icon (.png) & Nhạc (.mp3) đã đổi tên không dấu như trong code.
