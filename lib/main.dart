@@ -5,7 +5,6 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:confetti/confetti.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:marquee/marquee.dart';
-import 'package:vibration/vibration.dart';
 import 'dart:async';
 
 void main() async {
@@ -47,10 +46,17 @@ class _LovePageState extends State<LovePage> with TickerProviderStateMixin {
   String _currentReminder = "";
   bool _isGauOnline = false;
   bool _isBeOnline = false;
+  
   String _giftContent = "";
   bool _isGiftAvailable = false;
   bool _isGiftOpened = false;
+  
   bool _showBubble = false;
+  String _bubbleText = "";
+  String _bubbleImage = "";
+  String _bubbleEmoji = "";
+  
+  bool _isMuted = false;
   Timer? _bubbleTimer;
 
   final DateTime _startDate = DateTime(2025, 10, 12);
@@ -71,41 +77,98 @@ class _LovePageState extends State<LovePage> with TickerProviderStateMixin {
     {"n": "Trưa vui vẻ", "i": "mammam.png", "s": "buoi_trua_vui_ve.mp3", "e": "🍱"},
     {"n": "Giỏi nhất", "i": "gioi_nhat.png", "s": "gioi_nhat.mp3", "e": "🥇"},
     {"n": "Mún gọi Anh", "i": "goi_cho_anh.png", "s": "goi_cho_anh.mp3", "e": "📞"},
-    {"n": "Ngủ ngon ạ", "i": "anhngungon.png", "s": "ngu_ngon_a.mp3", "e": "🌙"},
+    {"n": "Ngủ ngon ạ", "i": "anhngungon.png", "s": "ngu_gon_a.mp3", "e": "🌙"},
     {"n": "Ngủ sớm ạ", "i": "gaubongngungon.png", "s": "ngu_som_a.mp3", "e": "😴"},
     {"n": "Nhớ Gấu", "i": "nho_gau_bong.png", "s": "nho_gau_bong.mp3", "e": "🧸"},
     {"n": "Ôm cái nè", "i": "omcaine.png", "s": "notification.mp3", "e": "🫂"},
     {"n": "Hôn nè", "i": "hon.png", "s": "anh_oi.mp3", "e": "😘"},
     {"n": "Nhõng nhẽo", "i": "Nhongnheo.png", "s": "anh_oi.mp3", "e": "💅"},
+    {"n": "Chúc 5 Tháng", "i": "chuc_ky_niem_5Th.png", "s": "chuc_ky_niem_5Th.mp3", "e": "💖"},
+    {"n": "Uống thuốc nè", "i": "nhac_uong_thuoc.png", "s": "nhac_uong_thuoc.mp3", "e": "💊"},
+    {"n": "Lục trà", "i": "luc_tra.png", "s": "luc_tra.mp3", "e": "🍵"},
+    {"n": "Phê La", "i": "phela.png", "s": "phela.mp3", "e": "🥤"},
+    {"n": "Bún bò", "i": "bunbo.png", "s": "bunbo.mp3", "e": "🍜"},
+    {"n": "Nhớ Bé Trắng", "i": "nho_be_trang.png", "s": "nho_be_trang.mp3", "e": "🐰"},
   ];
 
   @override
   void initState() {
     super.initState();
     _confettiCtrl = ConfettiController(duration: const Duration(seconds: 5));
-    _checkSavedUser();
+    _checkSavedUser(); 
   }
 
-  void _scrollToBottom() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (_scrollController.hasClients) {
-        _scrollController.animateTo(
-          _scrollController.position.maxScrollExtent,
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeOut,
-        );
-      }
+  void _toggleMute() {
+    setState(() {
+      _isMuted = !_isMuted;
+      _bgmPlayer.setVolume(_isMuted ? 0 : 0.5);
     });
   }
 
- void _playBGM() async {
+  void _showGauReminderDialog() {
+    TextEditingController c = TextEditingController(text: _currentReminder);
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text("📌 Ghim lời nhắc hôm nay"),
+        content: TextField(controller: c, decoration: const InputDecoration(hintText: "Nhắc nhở mới...")),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text("Hủy")),
+          TextButton(onPressed: () {
+            _dbRef.child('reminders').set({"task": c.text, "ts": ServerValue.timestamp});
+            Navigator.pop(ctx);
+          }, child: const Text("Ghim")),
+        ],
+      ),
+    );
+  }
+
+  void _showGauGiftDialog() {
+    TextEditingController giftCtrl = TextEditingController();
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text("🎁 Gửi quà bí ẩn"),
+        content: TextField(controller: giftCtrl, decoration: const InputDecoration(hintText: "Lời nhắn quà...")),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text("Hủy")),
+          TextButton(onPressed: () {
+            _dbRef.child('gift').set({"content": giftCtrl.text, "available": true, "opened": false, "ts": ServerValue.timestamp});
+            Navigator.pop(ctx);
+          }, child: const Text("Gửi")),
+        ],
+      ),
+    );
+  }
+
+void _showBeGiftOpen() {
+  if (!_isGiftAvailable) return;
+  
+  showDialog(
+    context: context,
+    builder: (ctx) => AlertDialog(
+      title: const Text("🎁 Quà bí ẩn từ Gấu"),
+      content: Text(_giftContent.isEmpty ? "Đang chờ Gấu gửi quà..." : _giftContent),
+      actions: [
+        TextButton(
+          onPressed: () {
+            _dbRef.child('gift/opened').set(true); // Cập nhật trạng thái đã mở
+            _confettiCtrl.play(); // Nổ pháo hoa cho vui
+            Navigator.pop(ctx);
+          }, 
+          child: const Text("Yêu Gấu ❤️")
+        ),
+      ],
+    ),
+  );
+}
+ 
+  void _playBGM() async {
     try {
+      await _bgmPlayer.stop();
       await _bgmPlayer.setReleaseMode(ReleaseMode.loop);
-      // Gọi trực tiếp tên file nếu nó nằm ngay trong thư mục assets
-      await _bgmPlayer.play(AssetSource('love_song.mp3'), volume: 0.4);
-    } catch (e) {
-      debugPrint("Nhạc vẫn lỗi: $e");
-    }
+      await _bgmPlayer.play(AssetSource('love_song.mp3'), volume: 0.5);
+    } catch (e) { debugPrint("Lỗi nhạc: $e"); }
   }
 
   void _showAnniversaryDialog() {
@@ -117,15 +180,15 @@ class _LovePageState extends State<LovePage> with TickerProviderStateMixin {
         backgroundColor: Colors.transparent,
         child: Container(
           padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(30)),
+          decoration: BoxDecoration(color: Colors.white.withOpacity(0.9), borderRadius: BorderRadius.circular(30)),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               const Text("🎉 HAPPY 5 MONTHS 🎉", style: TextStyle(color: Colors.pinkAccent, fontSize: 22, fontWeight: FontWeight.bold)),
               const SizedBox(height: 15),
               const Icon(Icons.favorite, color: Colors.redAccent, size: 60),
-              const SizedBox(height: 15),
-              const Text("150 ngày bên nhau!\nCảm ơn em đã là trạm sạc của anh.", textAlign: TextAlign.center),
+              const SizedBox(height: 20),
+              const Text("🧸🧸🧸Cám ơn Bé Trắng đã Thương anh 150 ngày bên nhau cực hạnh phúc! Chồng thương bé lắm 🐰🐰🐰 ❤️", textAlign: TextAlign.center),
               const SizedBox(height: 25),
               ElevatedButton(
                 onPressed: () { _playBGM(); _confettiCtrl.stop(); Navigator.pop(ctx); },
@@ -152,18 +215,37 @@ class _LovePageState extends State<LovePage> with TickerProviderStateMixin {
     _dbRef.child('reminders').onValue.listen((event) {
       if (event.snapshot.value != null && mounted) {
         final data = event.snapshot.value as Map;
-        String task = data['task'] ?? "";
-        if (task.isNotEmpty) {
-          setState(() {
-            _currentReminder = task;
-            _showBubble = true;
-          });
-          _bubbleTimer?.cancel();
-          _bubbleTimer = Timer(const Duration(seconds: 12), () {
-            if (mounted) setState(() => _showBubble = false);
-          });
-        }
+        setState(() => _currentReminder = data['task'] ?? "");
       }
+    });
+
+    _dbRef.child('gift').onValue.listen((event) {
+      if (event.snapshot.value != null && mounted) {
+        final data = event.snapshot.value as Map;
+        setState(() {
+          _giftContent = data['content'] ?? "";
+          _isGiftAvailable = data['available'] ?? false;
+          _isGiftOpened = data['opened'] ?? false;
+        });
+      }
+    });
+    
+    _dbRef.child('actions_log').onValue.listen((event) {
+       if (event.snapshot.value != null && mounted) {
+          final data = event.snapshot.value as Map;
+          int ts = data['ts'] ?? 0;
+          int now = DateTime.now().millisecondsSinceEpoch;
+          if (now - ts < 10000) {
+            setState(() {
+              _bubbleText = data['name'];
+              _bubbleImage = data['image'];
+              _bubbleEmoji = data['emoji'];
+              _showBubble = true;
+            });
+            _bubbleTimer?.cancel();
+            _bubbleTimer = Timer(const Duration(seconds: 5), () => setState(() => _showBubble = false));
+          }
+       }
     });
   }
 
@@ -172,8 +254,7 @@ class _LovePageState extends State<LovePage> with TickerProviderStateMixin {
     String? saved = prefs.getString('user_name');
     if (saved != null) {
       setState(() => _userName = saved);
-      _setupPresence();
-      _listenData();
+      _setupPresence(); _listenData();
       Future.delayed(const Duration(seconds: 1), () => _showAnniversaryDialog());
     } else {
       Future.delayed(Duration.zero, () => _showNameDialog());
@@ -181,17 +262,13 @@ class _LovePageState extends State<LovePage> with TickerProviderStateMixin {
   }
 
   void _showNameDialog() {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (ctx) => AlertDialog(
-        title: const Text("🧸 Chào mừng Cục Zang 🐰"),
-        actions: [
-          TextButton(onPressed: () => _setIdentity("Gấu bông 3 tuổi rưỡi"), child: const Text("Gấu bông")),
-          TextButton(onPressed: () => _setIdentity("Bé Trắng 1 tuổi rưỡi"), child: const Text("Bé Trắng")),
-        ],
-      ),
-    );
+    showDialog(context: context, barrierDismissible: false, builder: (ctx) => AlertDialog(
+      title: const Text("🧸 Chào mừng Cục Zang 🐰"),
+      actions: [
+        TextButton(onPressed: () => _setIdentity("Gấu bông 3 tuổi rưỡi"), child: const Text("Gấu bông")),
+        TextButton(onPressed: () => _setIdentity("Bé Trắng 1 tuổi rưỡi"), child: const Text("Bé Trắng")),
+      ],
+    ));
   }
 
   void _setIdentity(String name) async {
@@ -199,8 +276,7 @@ class _LovePageState extends State<LovePage> with TickerProviderStateMixin {
     await prefs.setString('user_name', name);
     setState(() => _userName = name);
     Navigator.pop(context);
-    _setupPresence();
-    _listenData();
+    _setupPresence(); _listenData();
     Future.delayed(const Duration(seconds: 1), () => _showAnniversaryDialog());
   }
 
@@ -212,51 +288,56 @@ class _LovePageState extends State<LovePage> with TickerProviderStateMixin {
         onlineRef.set(true); onlineRef.onDisconnect().set(false);
       }
     });
-    _dbRef.child('presence/Gấu bông 3 tuổi rưỡi/online').onValue.listen((e) { if(mounted) setState(() => _isGauOnline = (e.snapshot.value == true)); });
-    _dbRef.child('presence/Bé Trắng 1 tuổi rưỡi/online').onValue.listen((e) { if(mounted) setState(() => _isBeOnline = (e.snapshot.value == true)); });
+    _dbRef.child('presence/Gấu bông 3 tuổi rưỡi/online').onValue.listen((e) => setState(() => _isGauOnline = (e.snapshot.value == true)));
+    _dbRef.child('presence/Bé Trắng 1 tuổi rưỡi/online').onValue.listen((e) => setState(() => _isBeOnline = (e.snapshot.value == true)));
     String partner = _userName.contains("Gấu") ? "Bé Trắng 1 tuổi rưỡi" : "Gấu bông 3 tuổi rưỡi";
     _dbRef.child('presence/$partner/mood').onValue.listen((e) { if (mounted && e.snapshot.value != null) setState(() => _partnerMood = e.snapshot.value.toString()); });
   }
 
   void _updateMood(String icon) { _dbRef.child('presence/$_userName/mood').set(icon); setState(() => _myMood = icon); }
 
-  void _sendMsg({String? actionText, String? sound}) {
+  void _sendMsg({String? actionText, String? sound, Map? actionData}) {
     String text = actionText ?? _msgCtrl.text.trim();
     if (text.isEmpty) return;
     _dbRef.child('messages').push().set({"sender": _userName, "text": text, "timestamp": ServerValue.timestamp});
+    if (actionData != null) _dbRef.child('actions_log').set({...actionData, "ts": ServerValue.timestamp});
     _msgCtrl.clear();
     if (sound != null) _audioPlayer.play(AssetSource(sound));
     _scrollToBottom();
   }
 
+  void _scrollToBottom() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_scrollController.hasClients) _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+    });
+  }
+
   Widget _avatarIsland(String name, bool online, Color color, String mood) {
-    String img = name.contains("Gấu") ? "assets/gau_bong.png" : "assets/be_trang.png";
+    bool isGauCard = name.contains("Gấu");
+    String img = isGauCard ? "assets/gau_bong.png" : "assets/be_trang.png";
     return GestureDetector(
       onLongPress: () {
         if (_userName.contains("Gấu")) {
-          TextEditingController c = TextEditingController(text: _currentReminder);
-          showDialog(context: context, builder: (ctx) => AlertDialog(
-            title: const Text("📌 Nhắc nhở Bé Trắng"),
-            content: TextField(controller: c),
-            actions: [TextButton(onPressed: () { _dbRef.child('reminders').set({"task": c.text, "ts": ServerValue.timestamp}); Navigator.pop(ctx); }, child: const Text("Ghim"))],
-          ));
+          isGauCard ? _showGauReminderDialog() : _showGauGiftDialog();
         }
       },
-      child: Column(children: [
-        Stack(alignment: Alignment.center, clipBehavior: Clip.none, children: [
-          Container(width: 65, height: 65, decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: online ? color : Colors.grey, width: 3)), child: CircleAvatar(backgroundColor: Colors.transparent, backgroundImage: AssetImage(img))),
-          Positioned(right: -2, bottom: -2, child: Container(padding: const EdgeInsets.all(3), decoration: const BoxDecoration(color: Colors.black54, shape: BoxShape.circle), child: Text(mood, style: const TextStyle(fontSize: 16)))),
-        ]),
-        const SizedBox(height: 6),
-        Text(name, style: TextStyle(color: color, fontSize: 9, fontWeight: FontWeight.bold)),
-      ]),
+      child: Column(
+        children: [
+          Stack(alignment: Alignment.center, clipBehavior: Clip.none, children: [
+            Container(width: 65, height: 65, decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: online ? color : Colors.grey, width: 3)), child: CircleAvatar(backgroundColor: Colors.transparent, backgroundImage: AssetImage(img))),
+            Positioned(right: -2, bottom: -2, child: Container(padding: const EdgeInsets.all(3), decoration: const BoxDecoration(color: Colors.black54, shape: BoxShape.circle), child: Text(mood, style: const TextStyle(fontSize: 16)))),
+          ]),
+          const SizedBox(height: 6),
+          Text(name, style: TextStyle(color: color, fontSize: 9, fontWeight: FontWeight.bold)),
+        ],
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     int days = DateTime.now().difference(_startDate).inDays;
-    bool isGau = _userName.contains("Gấu");
+    bool isGau = _userName.contains("Gấu Bông");
     return Scaffold(
       body: Stack(
         children: [
@@ -266,20 +347,100 @@ class _LovePageState extends State<LovePage> with TickerProviderStateMixin {
             child: Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.all(15),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15), // Giảm bớt padding ngang
+  child: Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+      // Bên trái: Avatar Bé Trắng
+      _avatarIsland("Bé Trắng 1 tuổi rưỡi", _isBeOnline, Colors.pinkAccent, isGau ? _partnerMood : _myMood),
+
+      // GIỮA: Cột thông tin (Bọc Expanded để chống tràn)
+      Expanded(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Dòng chữ này dài nên phải bọc FittedBox
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              child: const Text(
+                "Ở bên nhau Mãi Mãi nhé Bé Trắng", 
+                style: TextStyle(color: Colors.white38, fontSize: 8),
+              ),
+            ),
+            Text("$days", style: const TextStyle(color: Colors.white, fontSize: 32, fontWeight: FontWeight.bold)),
+            const Text("DAYS", style: TextStyle(color: Colors.pinkAccent, fontSize: 10)),
+            
+            // Nút Hộp Quà
+            IconButton(
+              padding: EdgeInsets.zero, // Ép sát cho đỡ tốn diện tích
+              constraints: const BoxConstraints(),
+              icon: Icon(
+                (_isGiftAvailable && !_isGiftOpened) ? Icons.card_giftcard : Icons.redeem,
+                color: (_isGiftAvailable && !_isGiftOpened) ? Colors.redAccent : Colors.white24,
+                size: 26,
+              ),
+              onPressed: isGau ? _showGauGiftDialog : _showBeGiftOpen,
+            ),
+          ],
+        ),
+      ),
+
+      // Bên phải: Avatar Gấu + Bong bóng
+      Stack(
+        clipBehavior: Clip.none, 
+        alignment: Alignment.topCenter, 
+        children: [
+          _avatarIsland("Gấu bông 3 tuổi rưỡi", _isGauOnline, Colors.blueAccent, isGau ? _myMood : _partnerMood),
+          
+          // Lời nhắc ghim
+          if (_currentReminder.isNotEmpty) 
+            Positioned(
+              top: -35, 
+              child: Material(
+                elevation: 5, 
+                borderRadius: BorderRadius.circular(5),
+                child: Container(
+                  padding: const EdgeInsets.all(4), 
+                  color: Colors.white, 
+                  child: Text("📌 $_currentReminder", style: const TextStyle(fontSize: 9, color: Colors.black))
+                )
+              )
+            ),
+          
+          // Bong bóng hành động
+          if (_showBubble) 
+            Positioned(
+              top: -105, 
+              child: TweenAnimationBuilder(
+                duration: const Duration(milliseconds: 500), 
+                tween: Tween<double>(begin: 0, end: 1), 
+                builder: (ctx, double val, child) => Transform.scale(
+                  scale: val, 
+                  child: Column(
                     children: [
-                      _avatarIsland("Bé Trắng 1 tuổi rưỡi", _isBeOnline, Colors.pinkAccent, isGau ? _partnerMood : _myMood),
-                      Column(children: [const Text("STAY TOGETHER", style: TextStyle(color: Colors.white38, fontSize: 8)), Text("$days", style: const TextStyle(color: Colors.white, fontSize: 35, fontWeight: FontWeight.bold)), const Text("DAYS", style: TextStyle(color: Colors.pinkAccent, fontSize: 12))]),
-                      Stack(clipBehavior: Clip.none, alignment: Alignment.topCenter, children: [
-                        _avatarIsland("Gấu bông 3 tuổi rưỡi", _isGauOnline, Colors.blueAccent, isGau ? _myMood : _partnerMood),
-                        if (_showBubble && _currentReminder.isNotEmpty)
-                          Positioned(top: -55, child: Material(elevation: 10, borderRadius: BorderRadius.circular(15), child: Container(padding: const EdgeInsets.all(10), decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(15)), child: Text(_currentReminder, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.black87))))),
-                      ]),
-                    ],
-                  ),
-                ),
+                      Container(
+                        width: 70, height: 70, 
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle, 
+                          border: Border.all(color: Colors.white, width: 2),
+                          image: DecorationImage(image: AssetImage("assets/$_bubbleImage"), fit: BoxFit.cover)
+                        )
+                      ),
+                      Container(
+                        padding: const EdgeInsets.all(4), 
+                        decoration: BoxDecoration(color: Colors.pinkAccent, borderRadius: BorderRadius.circular(10)), 
+                        child: Text("$_bubbleText $_bubbleEmoji", style: const TextStyle(color: Colors.white, fontSize: 9))
+                      )
+                    ]
+                  )
+                )
+              )
+            ),
+        ],
+      ),
+    ],
+  ),
+),
                 Container(height: 30, child: Marquee(text: _currentReminder.isNotEmpty ? "📌: $_currentReminder" : "💖 $localReminder", style: const TextStyle(color: Colors.white, fontSize: 11), velocity: 30, blankSpace: 80)),
                 Expanded(
                   child: StreamBuilder(
@@ -294,11 +455,12 @@ class _LovePageState extends State<LovePage> with TickerProviderStateMixin {
                     }
                   ),
                 ),
-                SizedBox(height: 120, child: GridView.builder(gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 5), itemCount: actions.length, itemBuilder: (ctx, i) => InkWell(onTap: () { _updateMood(actions[i]['e']!); _sendMsg(actionText: actions[i]['n'], sound: actions[i]['s']); }, child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [Image.asset('assets/${actions[i]['i']}', width: 30, height: 30, errorBuilder: (c,e,s) => const Icon(Icons.favorite, color: Colors.white24)), Text(actions[i]['n']!, style: const TextStyle(color: Colors.white70, fontSize: 7))])))),
+                SizedBox(height: 120, child: GridView.builder(gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 5), itemCount: actions.length, itemBuilder: (ctx, i) => InkWell(onTap: () { _updateMood(actions[i]['e']!); _sendMsg(actionText: actions[i]['n'], sound: actions[i]['s'], actionData: {"name": actions[i]['n'], "image": actions[i]['i'], "emoji": actions[i]['e']}); }, child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [Image.asset('assets/${actions[i]['i']}', width: 30, height: 30, errorBuilder: (c,e,s) => const Icon(Icons.favorite, color: Colors.white24)), Text(actions[i]['n']!, style: const TextStyle(color: Colors.white70, fontSize: 7))])))),
                 Padding(padding: const EdgeInsets.all(10), child: Row(children: [Expanded(child: TextField(controller: _msgCtrl, style: const TextStyle(color: Colors.white), decoration: InputDecoration(filled: true, fillColor: Colors.white10, border: OutlineInputBorder(borderRadius: BorderRadius.circular(30), borderSide: BorderSide.none), hintText: "Nhắn gì đó..."))), IconButton(icon: const Icon(Icons.send, color: Colors.pinkAccent), onPressed: () => _sendMsg())])),
               ],
             ),
           ),
+          Positioned(top: 100, right: 20, child: GestureDetector(onTap: _toggleMute, child: Container(padding: const EdgeInsets.all(8), decoration: BoxDecoration(color: Colors.black45, shape: BoxShape.circle), child: Icon(_isMuted ? Icons.volume_off : Icons.volume_up, color: _isMuted ? Colors.grey : Colors.pinkAccent, size: 20)))),
           Align(alignment: Alignment.topCenter, child: ConfettiWidget(confettiController: _confettiCtrl, blastDirection: 1.57, colors: const [Colors.red, Colors.pink])),
         ],
       ),
@@ -308,7 +470,6 @@ class _LovePageState extends State<LovePage> with TickerProviderStateMixin {
   @override
   void dispose() {
     _confettiCtrl.dispose(); _msgCtrl.dispose(); _audioPlayer.dispose(); _notiPlayer.dispose(); _bgmPlayer.dispose();
-    _scrollController.dispose(); _bubbleTimer?.cancel();
-    super.dispose();
+    _scrollController.dispose(); _bubbleTimer?.cancel(); super.dispose();
   }
 }

@@ -60,22 +60,26 @@
     <div class="heart">❤️</div>
     <p>Đang kết nối trạm sạc...</p>
   </div>
+<base href="$FLUTTER_BASE_HREF">
+<script src="flutter_bootstrap.js" async></script>
 
-  <script>
-    {{flutter_bootstrap_js}}
-    
-    // Cấu hình ép sử dụng HTML Renderer để nét căng trên iPhone
-    window.addEventListener('load', function(ev) {
-      _flutter.loader.load({
-        config: {
-          renderer: "html",
-        },
-        onEntrypointLoaded: async function(engineInitializer) {
-          const engine = await engineInitializer.initializeEngine();
-          await engine.runApp();
-        }
-      });
+<script>
+  window.addEventListener('load', function(ev) {
+    // Sử dụng _flutter.loader.load thay thế cho cái cũ bị lỗi treo
+    _flutter.loader.load({
+      serviceWorker: {
+        serviceWorkerVersion: serviceWorkerVersion,
+      },
+      onEntrypointLoaded: function(engineInitializer) {
+        engineInitializer.initializeEngine({
+          // Ép dùng renderer HTML để iPhone/Vivo không bị khựng animation
+          renderer: "html", 
+        }).then(function(appRunner) {
+          appRunner.runApp();
+        });
+      }
     });
-  </script>
+  });
+</script>
 </body>
 </html>
