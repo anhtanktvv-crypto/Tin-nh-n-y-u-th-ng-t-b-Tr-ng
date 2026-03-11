@@ -98,12 +98,25 @@ class _LovePageState extends State<LovePage> with TickerProviderStateMixin {
     _checkSavedUser(); 
   }
 
-  void _toggleMute() {
-    setState(() {
-      _isMuted = !_isMuted;
-      _bgmPlayer.setVolume(_isMuted ? 0 : 0.5);
-    });
+  void _toggleMute() async {
+  setState(() {
+    _isMuted = !_isMuted;
+  });
+
+  try {
+    if (_isMuted) {
+      // Ép dừng hẳn luồng nhạc, Safari sẽ không thể "cãi" được
+      await _bgmPlayer.pause(); 
+      await _bgmPlayer.setVolume(0); 
+    } else {
+      // Chỉnh âm lượng trước rồi mới cho chạy lại
+      await _bgmPlayer.setVolume(0.5);
+      await _bgmPlayer.resume(); 
+    }
+  } catch (e) {
+    debugPrint("Lỗi âm thanh: $e");
   }
+}
 
   void _showGauReminderDialog() {
     TextEditingController c = TextEditingController(text: _currentReminder);
