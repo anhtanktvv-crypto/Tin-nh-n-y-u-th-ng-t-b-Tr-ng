@@ -10,15 +10,17 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  # Các gói cần thiết để chạy tính năng âm thanh, database và hiệu ứng
   audioplayers: ^5.2.1
-  firebase_core: ^2.24.0
-  firebase_database: ^10.4.0
-  confetti: ^0.7.0
+  firebase_core: ^3.12.0
+  firebase_database: ^11.3.0
+  confetti: ^0.8.0
   cupertino_icons: ^1.0.6
-  shared_preferences: ^2.2.2
+  shared_preferences: ^2.5.3
   marquee: ^2.2.3
-  vibration: ^2.0.1  # Thêm dòng này để điều khiển rung
+  vibration: ^2.0.1
+  path_provider: ^2.1.2
+  web_haptics: ^0.0.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -26,7 +28,13 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
-
   assets:
-    # Hình ảnh nền và avatar
+    - assets/background.png
+    - assets/gau_bong.png
+    - assets/be_trang.png
+    - assets/music/
     - assets/
+  fonts:
+    - family: NotoSans
+      fonts:
+        - asset: assets/NotoSans-Regular.ttf
