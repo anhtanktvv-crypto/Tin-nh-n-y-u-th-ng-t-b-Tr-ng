@@ -57,16 +57,19 @@
     .a3 { top: 50%; left: 0; transform: translateY(-50%); background-image: url("assets/keylove.png"); }
     .a4 { top: 50%; right: 0; transform: translateY(-50%); background-image: url("assets/LockLove.png"); }
 
+    /* Chữ "Đang kết nối trạm yêu" NHỎ HƠN */
     .title {
       margin-top: 28px;
       color: white;
-      font-size: 15px;
+      font-size: clamp(11px, 3.5vw, 14px);
       font-weight: 600;
       background: rgba(255,255,255,.18);
-      padding: 10px 18px;
+      padding: 6px 14px;
       border-radius: 30px;
       backdrop-filter: blur(10px);
+      white-space: nowrap;
     }
+
     /* Thanh cuộn icon cảm xúc */
     .emotion-bar {
       margin-top: 20px;
@@ -74,7 +77,7 @@
       overflow-x: auto;
       white-space: nowrap;
       -webkit-overflow-scrolling: touch;
-      padding: 10px 0;
+      padding: 8px 0;
       scrollbar-width: thin;
     }
     .emotion-track {
@@ -84,11 +87,11 @@
       animation: floatIcons 8s infinite alternate ease-in-out;
     }
     .emotion-icon {
-      width: 48px;
-      height: 48px;
+      width: 42px;
+      height: 42px;
       background: white;
       border-radius: 50%;
-      padding: 8px;
+      padding: 6px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.15);
       background-size: cover;
       background-position: center;
@@ -103,18 +106,28 @@
     .emotion-icon:nth-child(5) { animation-delay: 0.8s; }
     @keyframes bounce {
       0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-8px); }
+      50% { transform: translateY(-6px); }
     }
     @keyframes floatIcons {
       0% { transform: translateX(0); }
       100% { transform: translateX(-20px); }
     }
+
+    /* Responsive cho điện thoại nhỏ */
     @media (max-width: 480px) {
       .ring { width: 130px; height: 130px; }
       .avatar { width: 48px; height: 48px; }
-      .title { font-size: 13px; padding: 8px 16px; white-space: nowrap; }
-      .emotion-icon { width: 40px; height: 40px; }
+      .title { font-size: 11px; padding: 5px 12px; white-space: nowrap; }
+      .emotion-icon { width: 36px; height: 36px; padding: 5px; }
+      .emotion-track { gap: 10px; }
     }
+    @media (max-width: 380px) {
+      .title { font-size: 10px; padding: 4px 10px; }
+      .emotion-icon { width: 34px; height: 34px; }
+      .ring { width: 120px; height: 120px; }
+      .avatar { width: 44px; height: 44px; }
+    }
+
     .heart {
       position: fixed;
       bottom: -30px;
@@ -137,17 +150,28 @@
       transition: .5s;
       pointer-events: none;
     }
+    /* Design by WMQ - NHỎ HƠN, GỌN HƠN */
     .design-by {
       position: fixed;
-      bottom: 16px;
-      right: 16px;
-      color: rgba(255,255,255,0.8);
-      font-size: 11px;
+      bottom: 12px;
+      right: 14px;
+      color: rgba(255,255,255,0.75);
+      font-size: 9px;
+      font-weight: 500;
       background: rgba(0,0,0,0.2);
-      padding: 4px 10px;
-      border-radius: 20px;
-      backdrop-filter: blur(4px);
+      padding: 3px 8px;
+      border-radius: 30px;
+      backdrop-filter: blur(6px);
       z-index: 1000;
+      letter-spacing: 0.3px;
+    }
+    @media (max-width: 380px) {
+      .design-by {
+        font-size: 8px;
+        bottom: 8px;
+        right: 10px;
+        padding: 2px 6px;
+      }
     }
   </style>
 </head>
@@ -185,9 +209,9 @@
     }, 2200);
   });
   document.body.addEventListener('click', () => {
-  const audio = new Audio();
-  audio.play().catch(() => {});
-});
+    const audio = new Audio();
+    audio.play().catch(() => {});
+  });
 </script>
 </body>
 </html>
