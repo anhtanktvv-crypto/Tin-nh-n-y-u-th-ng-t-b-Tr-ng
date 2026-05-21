@@ -1,6 +1,6 @@
 import 'dart:async';
 // ignore: avoid_web_libraries_in_flutter
-import 'dart:html' as html if (dart.library.html) '';
+import 'html_stub.dart' if (dart.library.html) 'dart:html' as html;
 import 'dart:math';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -1918,5 +1918,4 @@ class _LovePageState extends State<LovePage> with TickerProviderStateMixin {
     for (var sub in _subscriptions) sub.cancel();
     super.dispose();
   }
-}
 }

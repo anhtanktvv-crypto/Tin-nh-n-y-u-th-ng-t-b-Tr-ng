@@ -1,4 +1,4 @@
-import 'dart:html' as html;
+import '../html_stub.dart' if (dart.library.html) 'dart:html' as html;
 import 'package:firebase_database/firebase_database.dart';
 
 class NotificationService {
