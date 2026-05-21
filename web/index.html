@@ -11,6 +11,9 @@
   <meta name="theme-color" content="#ff8fb1">
   <title>Love Station</title>
   <link rel="manifest" href="manifest.json">
+  
+  <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
   <style>
     * {
       margin: 0;
@@ -22,11 +25,11 @@
       width: 100%;
       height: 100%;
       overflow: hidden;
-      background: linear-gradient(135deg, #ff9eb5, #ffbfd1);
+      background: #ffffff;
       font-family: system-ui, sans-serif;
       -webkit-text-size-adjust: 100%;
     }
-    /* Fix iOS overflow */
+    /* Khóa chặt màn hình chuẩn cho iOS/Android */
     #flutter_target, flutter-view {
       width: 100%;
       height: 100%;
@@ -37,178 +40,26 @@
       right: 0;
       bottom: 0;
     }
-    .loader {
-      position: fixed;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      z-index: 999;
-      background: linear-gradient(135deg, #ff9eb5, #ffd2df);
-    }
-    .heart-ring {
-      position: relative;
-      width: 220px;
-      height: 220px;
-      margin-bottom: 16px;
-    }
-    .avatar {
-      position: absolute;
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      background: white;
-      padding: 4px;
-      box-shadow: 0 4px 10px rgba(0,0,0,.12);
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-    }
-    .a1 { background-image: url("/assets/gau_bong.png"); }
-    .a2 { background-image: url("/assets/be_trang.png"); }
-    .a3 { background-image: url("/assets/keylove.png"); }
-    .a4 { background-image: url("/assets/LockLove.png"); }
-
-    @keyframes heartPath1 {
-      0% { top: 15%; left: 50%; transform: translate(-50%, -50%); }
-      20% { top: 30%; left: 22%; }
-      40% { top: 55%; left: 18%; }
-      60% { top: 80%; left: 50%; }
-      80% { top: 55%; left: 82%; }
-      100% { top: 15%; left: 50%; }
-    }
-    @keyframes heartPath2 {
-      0% { top: 55%; left: 85%; }
-      20% { top: 30%; left: 78%; }
-      40% { top: 15%; left: 50%; }
-      60% { top: 30%; left: 22%; }
-      80% { top: 80%; left: 50%; }
-      100% { top: 55%; left: 85%; }
-    }
-    @keyframes heartPath3 {
-      0% { top: 80%; left: 50%; }
-      25% { top: 55%; left: 18%; }
-      50% { top: 30%; left: 38%; }
-      75% { top: 30%; left: 62%; }
-      100% { top: 80%; left: 50%; }
-    }
-    @keyframes heartPath4 {
-      0% { top: 55%; left: 15%; }
-      25% { top: 30%; left: 22%; }
-      50% { top: 15%; left: 50%; }
-      75% { top: 30%; left: 78%; }
-      100% { top: 55%; left: 15%; }
-    }
-
-    .a1 { animation: heartPath1 10s ease-in-out infinite; }
-    .a2 { animation: heartPath2 11s ease-in-out infinite; }
-    .a3 { animation: heartPath3 12s ease-in-out infinite; }
-    .a4 { animation: heartPath4 13s ease-in-out infinite; }
-
-    .center-heart {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 60px;
-      height: 60px;
-      background: #ff4d6d;
-      -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M12,21.35L10.55,20.03C5.4,15.36 2,12.27 2,8.5 2,5.41 4.42,3 7.5,3c1.74,0 3.41.81 4.5,2.08C13.09,3.81 14.76,3 16.5,3 19.58,3 22,5.41 22,8.5c0,3.77-3.4,6.86-8.55,11.54L12,21.35Z'/%3E%3C/svg%3E") no-repeat center;
-      mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M12,21.35L10.55,20.03C5.4,15.36 2,12.27 2,8.5 2,5.41 4.42,3 7.5,3c1.74,0 3.41.81 4.5,2.08C13.09,3.81 14.76,3 16.5,3 19.58,3 22,5.41 22,8.5c0,3.77-3.4,6.86-8.55,11.54L12,21.35Z'/%3E%3C/svg%3E") no-repeat center;
-      -webkit-mask-size: contain;
-      mask-size: contain;
-      background: #ff2a4d;
-      box-shadow: 0 0 12px rgba(255,42,77,0.6);
-      animation: heartbeat 1.2s infinite ease-in-out;
-      z-index: 2;
-    }
-    @keyframes heartbeat {
-      0%, 100% { transform: translate(-50%, -50%) scale(1); }
-      50% { transform: translate(-50%, -50%) scale(1.1); }
-    }
-
-    .title {
-      margin-top: 20px;
-      color: white;
-      font-size: 14px;
-      font-weight: 600;
-      background: rgba(255,255,255,.18);
-      padding: 8px 16px;
-      border-radius: 30px;
-      backdrop-filter: blur(10px);
-      animation: textWobble 2s ease-in-out infinite alternate;
-    }
-    @keyframes textWobble {
-      0% { transform: translateY(0) scale(1); }
-      100% { transform: translateY(-3px) scale(1.02); }
-    }
-
-    @media (max-width: 480px) {
-      .heart-ring { width: 160px; height: 160px; }
-      .avatar { width: 40px; height: 40px; padding: 3px; }
-      .center-heart { width: 50px; height: 50px; }
-      .title { font-size: 12px; padding: 6px 14px; white-space: nowrap; }
-    }
-
-    .heart {
-      position: fixed;
-      bottom: -30px;
-      animation: fly 7s linear infinite;
-      opacity: .2;
-      font-size: 14px;
-    }
-    .h1 { left: 10%; animation-delay: 0s; }
-    .h2 { right: 12%; animation-delay: 3s; }
-    @keyframes fly {
-      from { transform: translateY(0); opacity: 0; }
-      20% { opacity: .3; }
-      to { transform: translateY(-100vh); opacity: 0; }
-    }
-    .fade {
-      opacity: 0;
-      transition: .5s;
-      pointer-events: none;
-    }
     .design-by {
       position: fixed;
       bottom: 12px;
       right: 12px;
-      color: rgba(255,255,255,0.7);
+      color: rgba(0, 0, 0, 0.4);
       font-size: 10px;
-      background: rgba(0,0,0,0.15);
+      background: rgba(255, 255, 255, 0.6);
       padding: 3px 8px;
       border-radius: 20px;
       backdrop-filter: blur(4px);
       z-index: 1000;
+      pointer-events: none;
     }
   </style>
 </head>
 <body>
-<div id="loader" class="loader">
-  <div class="heart-ring">
-    <div class="center-heart"></div>
-    <div class="avatar a1"></div>
-    <div class="avatar a2"></div>
-    <div class="avatar a3"></div>
-    <div class="avatar a4"></div>
-  </div>
-  <div class="title">💖 Đang kết nối trạm yêu 💖</div>
-</div>
-<div class="heart h1">💖</div>
-<div class="heart h2">💖</div>
-<div class="design-by">Design by WMQ</div>
-<script src="flutter_bootstrap.js" async></script>
-<script>
-  window.addEventListener('load', function() {
-    setTimeout(() => {
-      const loader = document.getElementById("loader");
-      if (loader) loader.classList.add("fade");
-    }, 2200);
-  });
-</script>
+
+  <div class="design-by">Design by WMQ</div>
+
+  <script src="flutter_bootstrap.js" async></script>
+
 </body>
 </html>
