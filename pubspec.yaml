@@ -32,12 +32,12 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  
+  # 🔥 ĐÃ GOM GỌN VÀ SỬA CHUẨN THƯ MỤC ASSETS ĐỂ WEB LOAD ĐƯỢC HẾT ẢNH NỀN
   assets:
-    - assets/background.png
-    - assets/gau_bong.png
-    - assets/be_trang.png
-    - assets/music/
     - assets/
+    - assets/music/
+
   fonts:
     - family: NotoSans
       fonts:
