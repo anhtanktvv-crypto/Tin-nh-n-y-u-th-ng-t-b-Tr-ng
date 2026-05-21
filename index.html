@@ -2,200 +2,129 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
+  
+  <base href="/">
+
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <meta name="description" content="💖Trạm Sạc Tình Yêu💝">
+  <meta name="description" content="Trạm Sạc Tình Yêu - Nơi kết nối trái tim">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Trạm Sạc">
   <meta name="theme-color" content="#ff8fb1">
   <title>Love Station</title>
   <link rel="manifest" href="manifest.json">
+  
+  <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     html, body {
-      width: 100%;
-      height: 100%;
+      width: 100%; height: 100%;
       overflow: hidden;
-      background: linear-gradient(135deg, #ff9eb5, #ffbfd1);
+      background: #ffffff;
       font-family: system-ui, sans-serif;
+      -webkit-text-size-adjust: 100%;
     }
     .loader {
-      position: fixed;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
+      position: fixed; inset: 0;
+      display: flex; align-items: center; justify-content: center; flex-direction: column;
       z-index: 999;
       background: linear-gradient(135deg, #ff9eb5, #ffd2df);
     }
-    .ring {
-      width: 160px;
-      height: 160px;
-      border-radius: 50%;
+    /* Vòng trái tim xoay */
+    .heart-ring {
       position: relative;
-      animation: rotate 12s linear infinite;
+      width: 180px; height: 180px;
+      margin-bottom: 20px;
+      animation: spinHeart 12s linear infinite;
     }
     .avatar {
-      width: 58px;
-      height: 58px;
       position: absolute;
+      width: 58px; height: 58px;
       border-radius: 50%;
       background: white;
       padding: 6px;
       box-shadow: 0 5px 14px rgba(0,0,0,.15);
-      background-size: cover;
-      background-position: center;
+      background-size: cover; background-position: center;
+      background-repeat: no-repeat;
     }
-    .a1 { top: 0; left: 50%; transform: translateX(-50%); background-image: url("assets/gau_bong.png"); }
-    .a2 { bottom: 0; left: 50%; transform: translateX(-50%); background-image: url("assets/be_trang.png"); }
-    .a3 { top: 50%; left: 0; transform: translateY(-50%); background-image: url("assets/keylove.png"); }
-    .a4 { top: 50%; right: 0; transform: translateY(-50%); background-image: url("assets/LockLove.png"); }
-
-    /* Chữ "Đang kết nối trạm yêu" NHỎ HƠN */
+    .a1 { top: 0; left: 50%; transform: translate(-50%, -50%); background-image: url("/assets/gau_bong.png"); }
+    .a2 { bottom: 0; left: 50%; transform: translate(-50%, 50%); background-image: url("/assets/be_trang.png"); }
+    .a3 { top: 50%; left: 0; transform: translate(-50%, -50%); background-image: url("/assets/keylove.png"); }
+    .a4 { top: 50%; right: 0; transform: translate(50%, -50%); background-image: url("/assets/LockLove.png"); }
+    /* Trái tim trung tâm */
+    .center-heart {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 70px; height: 70px;
+      background: #ff4d6d;
+      -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M12,21.35L10.55,20.03C5.4,15.36 2,12.27 2,8.5 2,5.41 4.42,3 7.5,3c1.74,0 3.41.81 4.5,2.08C13.09,3.81 14.76,3 16.5,3 19.58,3 22,5.41 22,8.5c0,3.77-3.4,6.86-8.55,11.54L12,21.35Z'/%3E%3C/svg%3E") no-repeat center;
+      mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M12,21.35L10.55,20.03C5.4,15.36 2,12.27 2,8.5 2,5.41 4.42,3 7.5,3c1.74,0 3.41.81 4.5,2.08C13.09,3.81 14.76,3 16.5,3 19.58,3 22,5.41 22,8.5c0,3.77-3.4,6.86-8.55,11.54L12,21.35Z'/%3E%3C/svg%3E") no-repeat center;
+      -webkit-mask-size: contain; mask-size: contain;
+      background: #ff2a4d;
+      box-shadow: 0 0 12px rgba(255,42,77,0.6);
+      animation: heartbeat 1.2s infinite ease-in-out;
+    }
+    @keyframes spinHeart {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    @keyframes heartbeat {
+      0%, 100% { transform: translate(-50%, -50%) scale(1); }
+      50% { transform: translate(-50%, -50%) scale(1.12); }
+    }
     .title {
       margin-top: 28px;
       color: white;
-      font-size: clamp(11px, 3.5vw, 14px);
+      font-size: 15px;
       font-weight: 600;
       background: rgba(255,255,255,.18);
-      padding: 6px 14px;
+      padding: 10px 18px;
       border-radius: 30px;
       backdrop-filter: blur(10px);
-      white-space: nowrap;
     }
-
-    /* Thanh cuộn icon cảm xúc */
-    .emotion-bar {
-      margin-top: 20px;
-      width: 100%;
-      overflow-x: auto;
-      white-space: nowrap;
-      -webkit-overflow-scrolling: touch;
-      padding: 8px 0;
-      scrollbar-width: thin;
-    }
-    .emotion-track {
-      display: inline-flex;
-      gap: 12px;
-      padding: 0 20px;
-      animation: floatIcons 8s infinite alternate ease-in-out;
-    }
-    .emotion-icon {
-      width: 42px;
-      height: 42px;
-      background: white;
-      border-radius: 50%;
-      padding: 6px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-      background-size: cover;
-      background-position: center;
-      transition: transform 0.2s;
-      animation: bounce 2s infinite;
-    }
-    /* Mỗi icon nhảy với độ trễ khác nhau */
-    .emotion-icon:nth-child(1) { animation-delay: 0s; }
-    .emotion-icon:nth-child(2) { animation-delay: 0.2s; }
-    .emotion-icon:nth-child(3) { animation-delay: 0.4s; }
-    .emotion-icon:nth-child(4) { animation-delay: 0.6s; }
-    .emotion-icon:nth-child(5) { animation-delay: 0.8s; }
-    @keyframes bounce {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-6px); }
-    }
-    @keyframes floatIcons {
-      0% { transform: translateX(0); }
-      100% { transform: translateX(-20px); }
-    }
-
-    /* Responsive cho điện thoại nhỏ */
     @media (max-width: 480px) {
-      .ring { width: 130px; height: 130px; }
+      .heart-ring { width: 140px; height: 140px; }
       .avatar { width: 48px; height: 48px; }
-      .title { font-size: 11px; padding: 5px 12px; white-space: nowrap; }
-      .emotion-icon { width: 36px; height: 36px; padding: 5px; }
-      .emotion-track { gap: 10px; }
+      .center-heart { width: 55px; height: 55px; }
+      .title { font-size: 13px; padding: 8px 16px; white-space: nowrap; }
+      .design-by { font-size: 9px; bottom: 12px; right: 12px; }
     }
-    @media (max-width: 380px) {
-      .title { font-size: 10px; padding: 4px 10px; }
-      .emotion-icon { width: 34px; height: 34px; }
-      .ring { width: 120px; height: 120px; }
-      .avatar { width: 44px; height: 44px; }
-    }
-
+    /* Trái tim bay */
     .heart {
-      position: fixed;
-      bottom: -30px;
+      position: fixed; bottom: -30px;
       animation: fly 7s linear infinite;
       opacity: .25;
     }
     .h1 { left: 10%; animation-delay: 0s; }
     .h2 { right: 12%; animation-delay: 3s; }
-    @keyframes rotate {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
     @keyframes fly {
       from { transform: translateY(0) scale(.8); opacity: 0; }
       20% { opacity: .3; }
       to { transform: translateY(-120vh) scale(1.4); opacity: 0; }
     }
-    .fade {
-      opacity: 0;
-      transition: .5s;
-      pointer-events: none;
-    }
-    /* Design by WMQ - NHỎ HƠN, GỌN HƠN */
+    .fade { opacity: 0; transition: .5s; pointer-events: none; }
     .design-by {
-      position: fixed;
-      bottom: 12px;
-      right: 14px;
-      color: rgba(255,255,255,0.75);
-      font-size: 9px;
-      font-weight: 500;
-      background: rgba(0,0,0,0.2);
-      padding: 3px 8px;
-      border-radius: 30px;
-      backdrop-filter: blur(6px);
+      position: fixed; bottom: 16px; right: 16px;
+      color: rgba(255,255,255,0.8); font-size: 11px;
+      background: rgba(0,0,0,0.2); padding: 4px 10px;
+      border-radius: 20px; backdrop-filter: blur(4px);
       z-index: 1000;
-      letter-spacing: 0.3px;
-    }
-    @media (max-width: 380px) {
-      .design-by {
-        font-size: 8px;
-        bottom: 8px;
-        right: 10px;
-        padding: 2px 6px;
-      }
     }
   </style>
 </head>
 <body>
 <div id="loader" class="loader">
-  <div class="ring">
+  <div class="heart-ring">
+    <div class="center-heart"></div>
     <div class="avatar a1"></div>
     <div class="avatar a2"></div>
     <div class="avatar a3"></div>
     <div class="avatar a4"></div>
   </div>
   <div class="title">💖 Đang kết nối trạm yêu 💖</div>
-  <!-- Thanh icon cảm xúc (lấy từ assets) -->
-  <div class="emotion-bar">
-    <div class="emotion-track">
-      <div class="emotion-icon" style="background-image: url('assets/Yeuquadi.png');"></div>
-      <div class="emotion-icon" style="background-image: url('assets/nho_gau_bong.png');"></div>
-      <div class="emotion-icon" style="background-image: url('assets/hon.png');"></div>
-      <div class="emotion-icon" style="background-image: url('assets/omcaine.png');"></div>
-      <div class="emotion-icon" style="background-image: url('assets/tuhao.png');"></div>
-      <div class="emotion-icon" style="background-image: url('assets/Rungdong.png');"></div>
-      <div class="emotion-icon" style="background-image: url('assets/anh_oi.png');"></div>
-    </div>
-  </div>
 </div>
 <div class="heart h1">💖</div>
 <div class="heart h2">💖</div>
@@ -207,10 +136,6 @@
       const loader = document.getElementById("loader");
       if (loader) loader.classList.add("fade");
     }, 2200);
-  });
-  document.body.addEventListener('click', () => {
-    const audio = new Audio();
-    audio.play().catch(() => {});
   });
 </script>
 </body>
