@@ -1,0 +1,121 @@
+{
+  "rules": {
+    // ===== CHAT =====
+    "messages": {
+      ".read": true,
+      ".write": true,
+      ".indexOn": ["timestamp"]
+    },
+    "typing": {
+      ".read": true,
+      ".write": true
+    },
+    "actions_log": {
+      ".read": true,
+      ".write": true,
+      ".indexOn": ["ts"]
+    },
+
+    // ===== PRESENCE =====
+    "presence": {
+      ".read": true,
+      ".write": true
+    },
+
+    // ===== REMINDERS & WISHES =====
+    "be_reminder": {
+      ".read": true,
+      ".write": true
+    },
+    "reminder": {
+      ".read": true,
+      ".write": true
+    },
+    "currentWish": {
+      ".read": true,
+      ".write": true
+    },
+
+    // ===== GIFT =====
+    "gift": {
+      ".read": true,
+      ".write": true
+    },
+
+    // ===== STATS =====
+    "sadDays": {
+      ".read": true,
+      ".write": true
+    },
+    "happyDays": {
+      ".read": true,
+      ".write": true
+    },
+
+    // ===== EVENTS (MỚI - có datetime cho notification) =====
+    "events": {
+      ".read": true,
+      ".write": true,
+      ".indexOn": ["timestamp", "date", "datetime"]
+    },
+
+    // ===== PET / MOCHI =====
+    "pet": {
+      ".read": true,
+      ".write": true
+    },
+    "mochi": {
+      ".read": true,
+      ".write": true,
+      "command": {
+        ".read": true,
+        ".write": true
+      }
+    },
+
+    // ===== EMERGENCY =====
+    "emergency": {
+      ".read": true,
+      ".write": true
+    },
+
+    // ===== LOGIN HISTORY =====
+    "loginHistory": {
+      ".read": true,
+      ".write": true
+    },
+
+    // ===== FEATURE REQUESTS =====
+    "featureRequests": {
+      ".read": true,
+      ".write": true
+    },
+
+    // ===== DATING MAP (MỚI) =====
+    "dating_map": {
+      ".read": true,
+      ".write": true,
+      ".indexOn": ["timestamp", "date", "category"]
+    },
+
+    // ===== TIME CAPSULE (MỚI) =====
+    "time_capsule": {
+      ".read": true,
+      ".write": true,
+      ".indexOn": ["unlock_date", "created_at"]
+    },
+
+    // ===== PIGGY BANK (MỚI) =====
+    "piggy_bank": {
+      ".read": true,
+      ".write": true,
+      ".indexOn": ["created_at"]
+    },
+
+    // ===== FALLBACK for any future nodes =====
+    "$other": {
+      ".read": true,
+      ".write": true
+    }
+  }
+}

@@ -3,10 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <meta name="description" content="💖Trạm Sạc Tình Yêu💝">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, shrink-to-fit=no">
+  <meta name="description" content="Trạm Sạc Tình Yêu - Nơi kết nối trái tim">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Love Station">
   <meta name="theme-color" content="#ff8fb1">
   <title>Love Station</title>
   <link rel="manifest" href="manifest.json">
@@ -23,6 +24,18 @@
       overflow: hidden;
       background: linear-gradient(135deg, #ff9eb5, #ffbfd1);
       font-family: system-ui, sans-serif;
+      -webkit-text-size-adjust: 100%;
+    }
+    /* Fix iOS overflow */
+    #flutter_target, flutter-view {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
     }
     .loader {
       position: fixed;
@@ -34,183 +47,167 @@
       z-index: 999;
       background: linear-gradient(135deg, #ff9eb5, #ffd2df);
     }
-    .ring {
-      width: 160px;
-      height: 160px;
-      border-radius: 50%;
+    .heart-ring {
       position: relative;
-      animation: rotate 12s linear infinite;
+      width: 220px;
+      height: 220px;
+      margin-bottom: 16px;
     }
     .avatar {
-      width: 58px;
-      height: 58px;
       position: absolute;
+      width: 48px;
+      height: 48px;
       border-radius: 50%;
       background: white;
-      padding: 6px;
-      box-shadow: 0 5px 14px rgba(0,0,0,.15);
+      padding: 4px;
+      box-shadow: 0 4px 10px rgba(0,0,0,.12);
       background-size: cover;
       background-position: center;
+      background-repeat: no-repeat;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
     }
-    .a1 { top: 0; left: 50%; transform: translateX(-50%); background-image: url("assets/gau_bong.png"); }
-    .a2 { bottom: 0; left: 50%; transform: translateX(-50%); background-image: url("assets/be_trang.png"); }
-    .a3 { top: 50%; left: 0; transform: translateY(-50%); background-image: url("assets/keylove.png"); }
-    .a4 { top: 50%; right: 0; transform: translateY(-50%); background-image: url("assets/LockLove.png"); }
+    .a1 { background-image: url("/assets/gau_bong.png"); }
+    .a2 { background-image: url("/assets/be_trang.png"); }
+    .a3 { background-image: url("/assets/keylove.png"); }
+    .a4 { background-image: url("/assets/LockLove.png"); }
 
-    /* Chữ "Đang kết nối trạm yêu" NHỎ HƠN */
+    @keyframes heartPath1 {
+      0% { top: 15%; left: 50%; transform: translate(-50%, -50%); }
+      20% { top: 30%; left: 22%; }
+      40% { top: 55%; left: 18%; }
+      60% { top: 80%; left: 50%; }
+      80% { top: 55%; left: 82%; }
+      100% { top: 15%; left: 50%; }
+    }
+    @keyframes heartPath2 {
+      0% { top: 55%; left: 85%; }
+      20% { top: 30%; left: 78%; }
+      40% { top: 15%; left: 50%; }
+      60% { top: 30%; left: 22%; }
+      80% { top: 80%; left: 50%; }
+      100% { top: 55%; left: 85%; }
+    }
+    @keyframes heartPath3 {
+      0% { top: 80%; left: 50%; }
+      25% { top: 55%; left: 18%; }
+      50% { top: 30%; left: 38%; }
+      75% { top: 30%; left: 62%; }
+      100% { top: 80%; left: 50%; }
+    }
+    @keyframes heartPath4 {
+      0% { top: 55%; left: 15%; }
+      25% { top: 30%; left: 22%; }
+      50% { top: 15%; left: 50%; }
+      75% { top: 30%; left: 78%; }
+      100% { top: 55%; left: 15%; }
+    }
+
+    .a1 { animation: heartPath1 10s ease-in-out infinite; }
+    .a2 { animation: heartPath2 11s ease-in-out infinite; }
+    .a3 { animation: heartPath3 12s ease-in-out infinite; }
+    .a4 { animation: heartPath4 13s ease-in-out infinite; }
+
+    .center-heart {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 60px;
+      height: 60px;
+      background: #ff4d6d;
+      -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M12,21.35L10.55,20.03C5.4,15.36 2,12.27 2,8.5 2,5.41 4.42,3 7.5,3c1.74,0 3.41.81 4.5,2.08C13.09,3.81 14.76,3 16.5,3 19.58,3 22,5.41 22,8.5c0,3.77-3.4,6.86-8.55,11.54L12,21.35Z'/%3E%3C/svg%3E") no-repeat center;
+      mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M12,21.35L10.55,20.03C5.4,15.36 2,12.27 2,8.5 2,5.41 4.42,3 7.5,3c1.74,0 3.41.81 4.5,2.08C13.09,3.81 14.76,3 16.5,3 19.58,3 22,5.41 22,8.5c0,3.77-3.4,6.86-8.55,11.54L12,21.35Z'/%3E%3C/svg%3E") no-repeat center;
+      -webkit-mask-size: contain;
+      mask-size: contain;
+      background: #ff2a4d;
+      box-shadow: 0 0 12px rgba(255,42,77,0.6);
+      animation: heartbeat 1.2s infinite ease-in-out;
+      z-index: 2;
+    }
+    @keyframes heartbeat {
+      0%, 100% { transform: translate(-50%, -50%) scale(1); }
+      50% { transform: translate(-50%, -50%) scale(1.1); }
+    }
+
     .title {
-      margin-top: 28px;
+      margin-top: 20px;
       color: white;
-      font-size: clamp(11px, 3.5vw, 14px);
+      font-size: 14px;
       font-weight: 600;
       background: rgba(255,255,255,.18);
-      padding: 6px 14px;
+      padding: 8px 16px;
       border-radius: 30px;
       backdrop-filter: blur(10px);
-      white-space: nowrap;
+      animation: textWobble 2s ease-in-out infinite alternate;
+    }
+    @keyframes textWobble {
+      0% { transform: translateY(0) scale(1); }
+      100% { transform: translateY(-3px) scale(1.02); }
     }
 
-    /* Thanh cuộn icon cảm xúc */
-    .emotion-bar {
-      margin-top: 20px;
-      width: 100%;
-      overflow-x: auto;
-      white-space: nowrap;
-      -webkit-overflow-scrolling: touch;
-      padding: 8px 0;
-      scrollbar-width: thin;
-    }
-    .emotion-track {
-      display: inline-flex;
-      gap: 12px;
-      padding: 0 20px;
-      animation: floatIcons 8s infinite alternate ease-in-out;
-    }
-    .emotion-icon {
-      width: 42px;
-      height: 42px;
-      background: white;
-      border-radius: 50%;
-      padding: 6px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-      background-size: cover;
-      background-position: center;
-      transition: transform 0.2s;
-      animation: bounce 2s infinite;
-    }
-    /* Mỗi icon nhảy với độ trễ khác nhau */
-    .emotion-icon:nth-child(1) { animation-delay: 0s; }
-    .emotion-icon:nth-child(2) { animation-delay: 0.2s; }
-    .emotion-icon:nth-child(3) { animation-delay: 0.4s; }
-    .emotion-icon:nth-child(4) { animation-delay: 0.6s; }
-    .emotion-icon:nth-child(5) { animation-delay: 0.8s; }
-    @keyframes bounce {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-6px); }
-    }
-    @keyframes floatIcons {
-      0% { transform: translateX(0); }
-      100% { transform: translateX(-20px); }
-    }
-
-    /* Responsive cho điện thoại nhỏ */
     @media (max-width: 480px) {
-      .ring { width: 130px; height: 130px; }
-      .avatar { width: 48px; height: 48px; }
-      .title { font-size: 11px; padding: 5px 12px; white-space: nowrap; }
-      .emotion-icon { width: 36px; height: 36px; padding: 5px; }
-      .emotion-track { gap: 10px; }
-    }
-    @media (max-width: 380px) {
-      .title { font-size: 10px; padding: 4px 10px; }
-      .emotion-icon { width: 34px; height: 34px; }
-      .ring { width: 120px; height: 120px; }
-      .avatar { width: 44px; height: 44px; }
+      .heart-ring { width: 160px; height: 160px; }
+      .avatar { width: 40px; height: 40px; padding: 3px; }
+      .center-heart { width: 50px; height: 50px; }
+      .title { font-size: 12px; padding: 6px 14px; white-space: nowrap; }
     }
 
     .heart {
       position: fixed;
       bottom: -30px;
       animation: fly 7s linear infinite;
-      opacity: .25;
+      opacity: .2;
+      font-size: 14px;
     }
     .h1 { left: 10%; animation-delay: 0s; }
     .h2 { right: 12%; animation-delay: 3s; }
-    @keyframes rotate {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
     @keyframes fly {
-      from { transform: translateY(0) scale(.8); opacity: 0; }
+      from { transform: translateY(0); opacity: 0; }
       20% { opacity: .3; }
-      to { transform: translateY(-120vh) scale(1.4); opacity: 0; }
+      to { transform: translateY(-100vh); opacity: 0; }
     }
     .fade {
       opacity: 0;
       transition: .5s;
       pointer-events: none;
     }
-    /* Design by WMQ - NHỎ HƠN, GỌN HƠN */
     .design-by {
       position: fixed;
       bottom: 12px;
-      right: 14px;
-      color: rgba(255,255,255,0.75);
-      font-size: 9px;
-      font-weight: 500;
-      background: rgba(0,0,0,0.2);
+      right: 12px;
+      color: rgba(255,255,255,0.7);
+      font-size: 10px;
+      background: rgba(0,0,0,0.15);
       padding: 3px 8px;
-      border-radius: 30px;
-      backdrop-filter: blur(6px);
+      border-radius: 20px;
+      backdrop-filter: blur(4px);
       z-index: 1000;
-      letter-spacing: 0.3px;
-    }
-    @media (max-width: 380px) {
-      .design-by {
-        font-size: 8px;
-        bottom: 8px;
-        right: 10px;
-        padding: 2px 6px;
-      }
     }
   </style>
 </head>
 <body>
 <div id="loader" class="loader">
-  <div class="ring">
+  <div class="heart-ring">
+    <div class="center-heart"></div>
     <div class="avatar a1"></div>
     <div class="avatar a2"></div>
     <div class="avatar a3"></div>
     <div class="avatar a4"></div>
   </div>
   <div class="title">💖 Đang kết nối trạm yêu 💖</div>
-  <!-- Thanh icon cảm xúc (lấy từ assets) -->
-  <div class="emotion-bar">
-    <div class="emotion-track">
-      <div class="emotion-icon" style="background-image: url('assets/Yeuquadi.png');"></div>
-      <div class="emotion-icon" style="background-image: url('assets/nho_gau_bong.png');"></div>
-      <div class="emotion-icon" style="background-image: url('assets/hon.png');"></div>
-      <div class="emotion-icon" style="background-image: url('assets/omcaine.png');"></div>
-      <div class="emotion-icon" style="background-image: url('assets/tuhao.png');"></div>
-      <div class="emotion-icon" style="background-image: url('assets/Rungdong.png');"></div>
-      <div class="emotion-icon" style="background-image: url('assets/anh_oi.png');"></div>
-    </div>
-  </div>
 </div>
 <div class="heart h1">💖</div>
 <div class="heart h2">💖</div>
 <div class="design-by">Design by WMQ</div>
 <script src="flutter_bootstrap.js" async></script>
 <script>
-  window.addEventListener("load", function() {
+  window.addEventListener('load', function() {
     setTimeout(() => {
       const loader = document.getElementById("loader");
       if (loader) loader.classList.add("fade");
     }, 2200);
-  });
-  document.body.addEventListener('click', () => {
-    const audio = new Audio();
-    audio.play().catch(() => {});
   });
 </script>
 </body>

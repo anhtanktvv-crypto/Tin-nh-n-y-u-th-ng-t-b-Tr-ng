@@ -17,14 +17,18 @@ dependencies:
   cupertino_icons: ^1.0.6
   shared_preferences: ^2.5.3
   marquee: ^2.2.3
-  vibration: ^2.0.1
+  vibration: ^3.1.8
   path_provider: ^2.1.2
   web_haptics: ^0.0.1
+  peanut: ^6.0.1
+  intl: ^0.19.0
+  
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^3.0.0
+  
 
 flutter:
   uses-material-design: true
