@@ -339,9 +339,90 @@ class LuluCommand {
   LuluCommand({required this.action, this.file});
 }
 
+// Simple pattern model for LuLu's seeded replies
+class LuluPattern {
+  final String intent;
+  final List<String> keywords;
+  final String prompt;
+  final String response;
+
+  LuluPattern({required this.intent, required this.keywords, required this.prompt, required this.response});
+}
+
 class LuluAI {
   final Map<String, String> memory = {};
   final Random _rand = Random();
+
+  // Seeded patterns loaded into LuLu (acts like training data)
+  final List<LuluPattern> _builtInPatterns = [
+    LuluPattern(
+      intent: "favorite_places",
+      keywords: ["đi chơi ở đâu", "công viên bờ sông", "công viên sáng tạo", "chỗ hẹn hò", "đi dạo"],
+      prompt: "Chị Quyên thích đi đâu chơi nhất vậy LuLu?",
+      response: "Dạ, LuLu quét thấy Bé Trắng 1 tuổi rưỡi mê nhất là được đi dạo mát ở Công viên bờ sông và Công viên sáng tạo nè! Nhưng mà chỗ thích nhất của chị Quyên vẫn là ngồi sau xe để cục bạc Tấn chở đi khắp thế gian, và 'đi thẳng vào lòng anh Tấn' luôn đó ạ! 🗺️❤️",
+    ),
+    LuluPattern(
+      intent: "cuc_bac_shipper",
+      keywords: ["cục bạc", "chở đi khắp thế gian", "chở đi chơi"],
+      prompt: "Hôm nay cục bạc chở Bé Trắng đi đâu chơi đây?",
+      response: "Hôm nay cục bạc gấu bông mét tam sẽ nổ máy chở cục zàng đi khắp thế gian luôn! Đi qua công viên bờ sông hóng gió, ghé công viên sáng tạo check-in, rồi mình đi ăn bún bò, uống Phê La bòng bưởi nha. Anh Tấn cân tất! 🏍️✨",
+    ),
+    LuluPattern(
+      intent: "shortcut_feature",
+      keywords: ["rút gọn siêu cấp", "nói ngắn gọn", "tóm tắt nhanh", "rut gon sieu cap"],
+      prompt: "LuLu kích hoạt tính năng rút gọn siêu cấp coi!",
+      response: "⚡ Tính năng [Rút gọn siêu cấp] đã BẬT! Tóm lại là: Anh Tấn thương Bé Trắng nhất trên đời, Bé Trắng là cục zàng iu 1 tuổi rưỡi luôn đúng. Chấm hết. Hết văn tự! 🥰",
+    ),
+    LuluPattern(
+      intent: "into_tan_heart",
+      keywords: ["đi vào lòng anh tấn", "lòng anh tấn"],
+      prompt: "Đường nào đi vào lòng anh Tấn nhanh nhất hả LuLu?",
+      response: "Đường đó không cần Google Maps đâu chị Quyên ơi! Chị chỉ cần đứng yên một chỗ cười một cái là đã 'đi thẳng vào lòng anh Tấn' và định cư vĩnh viễn ở trong đó rồi, không có lối ra đâu ạ! 💖",
+    ),
+    // additional seeds (from the larger set)
+    LuluPattern(
+      intent: "who_is_chi_quyen",
+      keywords: ["chị quyens", "chi quyen", "bé trắng", "be trang", "cục zàng", "cuc zang", "người yêu anh tấn"],
+      prompt: "Chị Quyên hay Bé Trắng là ai vậy LuLu?",
+      response: "Dạ! Chị Quyên chính là Bé Trắng 1 tuổi rưỡi, cục zàng iu duy nhất của anh Tấn đó ạ! Chị Quyên siêu cấp đáng yêu, là 'nóc nhà' quyền lực tối cao nắm giữ trái tim của gấu bông mét tám luôn nha! 🥰",
+    ),
+    LuluPattern(
+      intent: "who_is_anh_tan",
+      keywords: ["anh tấn", "anh tan", "gấu bông", "gau bong met tam", "3 tuổi rưỡi", "wmq", "tác giả"],
+      prompt: "Thế còn anh Tấn là ai?",
+      response: "Anh Tấn là chú gấu bông mét tam, gấu bông 3 tuổi rưỡi và là cục zàng iu của chị Quyên đó! Anh Tấn vừa là kỹ sư IT giỏi giang, vừa là người đứng sau thương hiệu WMQ (tên viết tắt trên mọi thiết kế và sản phẩm độc quyền anh làm tặng chị Quyên). Chuẩn gu người yêu điểm 10 luôn ạ! 🧸✨",
+    ),
+    LuluPattern(
+      intent: "food_recommendation",
+      keywords: ["ăn gì", "món ăn yêu thích", "đói bụng", "gợi ý món ăn", "thèm ăn"],
+      prompt: "Bây giờ hai đứa mình nên đi ăn gì đây LuLu?",
+      response: "Menu ruột của hai anh chị lên sóng đây ạ: Mình đi làm liền tô bún bò đậm đà, bún thịt nướng thơm phức, bánh canh cua thanh ngọt, hay đổi gió với bò bít tết sang chảnh nha. Nếu muốn ăn vặt nhẹ nhàng thì phá lấu, cút chiên bơ, bắp nướng, hoặc đơn giản là ổ bánh mì trứng ốp la thịt là chuẩn bài luôn. Anh Tấn dắt Bé Trắng đi ăn ngay cho nóng nè! 🍜🥩",
+    ),
+    LuluPattern(
+      intent: "drink_recommendation",
+      keywords: ["uống gì", "khát nước", "trà sữa", "cà phê", "nước uống"],
+      prompt: "LuLu gợi ý nước uống cho hai anh chị đi.",
+      response: "Dạ, list nước uống 'gây nghiện' của hai anh chị đã được LuLu quét sẵn: Hôm nay mình chốt Phê La bòng bưởi chuẩn vị, trà xanh chanh thạch đào, hay lục trà chanh trân châu đen giải nhiệt nha? Hoặc anh chị có thể chọn cà phê trân châu, trà sữa chân trâu, trà chanh đá, hay ly trà mãng cầu chua ngọt siêu dính nè. Để anh Tấn đi mua cho cục zàng iu nha! 🧋🍊",
+    ),
+    LuluPattern(
+      intent: "what_is_wmq",
+      keywords: ["wmq là gì", "chữ wmq", "thương hiệu wmq", "thiết kế wmq"],
+      prompt: "LuLu có biết chữ WMQ trên sản phẩm nghĩa là gì không?",
+      response: "Ui, LuLu biết rõ luôn nha! WMQ chính là dấu ấn thương hiệu tình yêu độc quyền do chính anh Tấn thiết kế. Bất cứ sản phẩm, giao diện web hay đồ DIY nào có gắn chữ WMQ thì đều mang ý nghĩa là sản phẩm này được làm ra bằng 100% tình yêu thương của anh Tấn dành riêng cho Bé Trắng 1 tuổi rưỡi đó ạ! 🎨❤️",
+    ),
+    LuluPattern(
+      intent: "check_current_date",
+      keywords: ["hôm nay ngày mấy", "ngày bao nhiêu", "thứ mấy rồi", "bây giờ là mấy giờ"],
+      prompt: "Hôm nay ngày mấy rồi LuLu ơi?",
+      response: "Dạ, hôm nay là ngày ${DateTime.now().day.toString().padLeft(2,'0')} tháng ${DateTime.now().month.toString().padLeft(2,'0')} năm ${DateTime.now().year} đó anh Tấn ơi! Lại thêm một ngày tuyệt vời nữa để gấu bông 3 tuổi rưỡi chiều chuộng và mua đồ ăn ngon cho cục zàng iu Bé Trắng của mình rồi nè! 📅💖",
+    ),
+    LuluPattern(
+      intent: "handling_anger_emergency",
+      keywords: ["giận rồi", "dỗi", "làm sao dỗ", "hết thương", "sắp có biến"],
+      prompt: "Bé Trắng đang dỗi anh Tấn rồi, LuLu cứu nguy với!",
+      response: "🚨 BÁO ĐỘNG ĐỎ! Cục zàng iu Bé Trắng 1 tuổi rưỡi đang dỗi kìa! Gấu bông mét tám mau mau hạ vũ khí, tạm dừng code và áp dụng ngay tuyệt chiêu: ôm một cái thật chặt, dỗ dành ngọt ngào, rồi mua ngay Phê La bòng bưởi hoặc dắt đi ăn bún bò, phá lấu liền đi ạ. Đảm bảo Bé Trắng sẽ nguôi giận và thương anh Tấn lại 100% luôn! 🚨",
+    ),
+  ];
 
   // Aliases for personalization
   final List<String> anhtanAliases = ["gấu bông mét tám", "gấu bông 3 tuổi rưỡi", "golden húi", "chồng iu của bé trắng", "gấu bông"];
@@ -352,6 +433,15 @@ class LuluAI {
 
     if (lower.isEmpty) {
       return LuluResponse(text: 'LuLu chờ câu hỏi của anh nè, đừng ngại hỏi nhé 🥰');
+    }
+
+    // Check seeded built-in patterns first (fast path)
+    for (final p in _builtInPatterns) {
+      for (final kw in p.keywords) {
+        if (lower.contains(kw)) {
+          return LuluResponse(text: p.response);
+        }
+      }
     }
 
     // Learning: save simple facts with prefix "ghi nhớ:" or "nhớ rằng"

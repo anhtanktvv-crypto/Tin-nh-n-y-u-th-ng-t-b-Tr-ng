@@ -15,14 +15,22 @@ import 'mochi_ai.dart';
 // New: Better web responsive utilities
 class ResponsiveLayout extends StatelessWidget {
   final Widget mobile, tablet, desktop;
-  const ResponsiveLayout({required this.mobile, required this.tablet, required this.desktop, Key? key}) : super(key: key);
-  
+  const ResponsiveLayout(
+      {required this.mobile,
+      required this.tablet,
+      required this.desktop,
+      Key? key})
+      : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
-      if (constraints.maxWidth < 600) return mobile;
-      else if (constraints.maxWidth < 1200) return tablet;
-      else return desktop;
+      if (constraints.maxWidth < 600)
+        return mobile;
+      else if (constraints.maxWidth < 1200)
+        return tablet;
+      else
+        return desktop;
     });
   }
 }
@@ -112,11 +120,14 @@ class _LovePageState extends State<LovePage> with TickerProviderStateMixin {
   Timer? _waterReminderTimer;
   bool _waterReminderEnabled = false;
   int _waterHour = 9, _waterMinute = 0;
-  final String _waterEnabledKey = "waterEnabled", _waterHourKey = "waterHour", _waterMinuteKey = "waterMinute";
+  final String _waterEnabledKey = "waterEnabled",
+      _waterHourKey = "waterHour",
+      _waterMinuteKey = "waterMinute";
   bool _emergencySent = false;
 
   // -------------------- MOCHI AI RESPONSE --------------------
-  String _mochiAnswer = "💬 Hãy hỏi Mochi bất cứ điều gì! (VD: yêu, nhớ, ăn gì, nhạc...)";
+  String _mochiAnswer =
+      "💬 Hãy hỏi Mochi bất cứ điều gì! (VD: yêu, nhớ, ăn gì, nhạc...)";
   bool _isMochiThinking = false;
 
   // -------------------- LULU AI CHAT --------------------
@@ -191,7 +202,11 @@ class _LovePageState extends State<LovePage> with TickerProviderStateMixin {
 
     // Route to LuLu if user asks for LuLu or mentions anh Tấn / chị Quyên
     final lower = question.toLowerCase();
-    if (lower.contains('lulu') || lower.contains('lu lu') || lower.contains('anh tấn') || lower.contains('chị quyên') || lower.contains('chị quyen')) {
+    if (lower.contains('lulu') ||
+        lower.contains('lu lu') ||
+        lower.contains('anh tấn') ||
+        lower.contains('chị quyên') ||
+        lower.contains('chị quyen')) {
       final lresp = luluAI.askLulu(question);
       // handle play command
       if (lresp.command?.action == 'play' && lresp.command?.file != null) {
@@ -243,7 +258,8 @@ class _LovePageState extends State<LovePage> with TickerProviderStateMixin {
     mochiPet.feed();
     if (mounted) {
       setState(() {
-        _mochiAnswer = "Mochi: Nom nom nom! Cảm ơn đã cho Mochi ăn 🍜 HP: ${mochiPet.happiness}% ⚡${mochiPet.energy}%";
+        _mochiAnswer =
+            "Mochi: Nom nom nom! Cảm ơn đã cho Mochi ăn 🍜 HP: ${mochiPet.happiness}% ⚡${mochiPet.energy}%";
       });
       _showSnackbar("Mochi vui vẻ!");
     }
@@ -255,29 +271,56 @@ class _LovePageState extends State<LovePage> with TickerProviderStateMixin {
       builder: (ctx) => StatefulBuilder(
         builder: (ctx, setDialogState) {
           return Dialog(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
             child: Container(
               decoration: BoxDecoration(
                 color: CuteColors.background,
                 borderRadius: BorderRadius.circular(28),
               ),
               padding: const EdgeInsets.all(24),
-              constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.8, maxWidth: 400),
+              constraints: BoxConstraints(
+                  maxHeight: MediaQuery.of(context).size.height * 0.8,
+                  maxWidth: 400),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   // Header
-                  Text("🤖 Mochi - Thú cưng AI dễ thương", style: Theme.of(context).textTheme.displayLarge?.copyWith(fontSize: 18)),
-                  Text(mochiPet.getStatus(), style: const TextStyle(fontSize: 12, color: CuteColors.textLight)),
+                  Text("🤖 Mochi - Thú cưng AI dễ thương",
+                      style: Theme.of(context)
+                          .textTheme
+                          .displayLarge
+                          ?.copyWith(fontSize: 18)),
+                  Text(mochiPet.getStatus(),
+                      style: const TextStyle(
+                          fontSize: 12, color: CuteColors.textLight)),
                   const SizedBox(height: 12),
 
                   // Pet care buttons
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      CuteButton(label: "🍜 Cho ăn", onTap: () { _feedMochi(); setDialogState(() {}); }, isSmall: true),
-                      CuteButton(label: "🎮 Chơi", onTap: () { mochiPet.play(); setDialogState(() {}); }, isSmall: true),
-                      CuteButton(label: "😴 Nghỉ ngơi", onTap: () { mochiPet.rest(); setDialogState(() {}); }, isSmall: true),
+                      CuteButton(
+                          label: "🍜 Cho ăn",
+                          onTap: () {
+                            _feedMochi();
+                            setDialogState(() {});
+                          },
+                          isSmall: true),
+                      CuteButton(
+                          label: "🎮 Chơi",
+                          onTap: () {
+                            mochiPet.play();
+                            setDialogState(() {});
+                          },
+                          isSmall: true),
+                      CuteButton(
+                          label: "😴 Nghỉ ngơi",
+                          onTap: () {
+                            mochiPet.rest();
+                            setDialogState(() {});
+                          },
+                          isSmall: true),
                     ],
                   ),
                   const SizedBox(height: 16),
@@ -287,10 +330,12 @@ class _LovePageState extends State<LovePage> with TickerProviderStateMixin {
                     controller: _mochiInputCtrl,
                     decoration: InputDecoration(
                       hintText: "Hỏi Mochi (yêu, nhớ, ăn, nhạc...)",
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(16)),
                       filled: true,
                       fillColor: CuteColors.accent,
-                      prefixIcon: const Icon(Icons.chat_bubble, color: CuteColors.primary),
+                      prefixIcon: const Icon(Icons.chat_bubble,
+                          color: CuteColors.primary),
                     ),
                     onSubmitted: (value) async {
                       if (value.trim().isEmpty) return;
@@ -309,15 +354,23 @@ class _LovePageState extends State<LovePage> with TickerProviderStateMixin {
                               padding: EdgeInsets.all(16.0),
                               child: Column(
                                 children: [
-                                  SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2)),
+                                  SizedBox(
+                                      height: 20,
+                                      width: 20,
+                                      child: CircularProgressIndicator(
+                                          strokeWidth: 2)),
                                   SizedBox(height: 12),
-                                  Text("Mochi đang suy nghĩ...", style: TextStyle(fontStyle: FontStyle.italic)),
+                                  Text("Mochi đang suy nghĩ...",
+                                      style: TextStyle(
+                                          fontStyle: FontStyle.italic)),
                                 ],
                               ),
                             )
                           : CuteCard(
                               bgColor: CuteColors.accent,
-                              child: Text(_mochiAnswer, style: const TextStyle(fontSize: 14, color: CuteColors.primary)),
+                              child: Text(_mochiAnswer,
+                                  style: const TextStyle(
+                                      fontSize: 14, color: CuteColors.primary)),
                             ),
                     ),
                   ),
@@ -333,29 +386,43 @@ class _LovePageState extends State<LovePage> with TickerProviderStateMixin {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text("🎮 Trò chơi:", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+                        const Text("🎮 Trò chơi:",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 12)),
                         const SizedBox(height: 8),
                         Wrap(
                           spacing: 8,
                           children: [
                             CuteButton(
                               label: "Đoán số",
-                              onTap: () { _playMochiGame("guess"); setDialogState(() {}); },
+                              onTap: () {
+                                _playMochiGame("guess");
+                                setDialogState(() {});
+                              },
                               isSmall: true,
                             ),
                             CuteButton(
                               label: "Trivia",
-                              onTap: () { _playMochiGame("trivia"); setDialogState(() {}); },
+                              onTap: () {
+                                _playMochiGame("trivia");
+                                setDialogState(() {});
+                              },
                               isSmall: true,
                             ),
                             CuteButton(
                               label: "Kỉ niệm",
-                              onTap: () { _playMochiGame("memory"); setDialogState(() {}); },
+                              onTap: () {
+                                _playMochiGame("memory");
+                                setDialogState(() {});
+                              },
                               isSmall: true,
                             ),
                             CuteButton(
                               label: "Quiz",
-                              onTap: () { _playMochiGame("quiz"); setDialogState(() {}); },
+                              onTap: () {
+                                _playMochiGame("quiz");
+                                setDialogState(() {});
+                              },
                               isSmall: true,
                             ),
                           ],
@@ -371,12 +438,18 @@ class _LovePageState extends State<LovePage> with TickerProviderStateMixin {
                     children: [
                       CuteButton(
                         label: "😄 Chuyện hài hước",
-                        onTap: () { _mochiTellStory("funny"); setDialogState(() {}); },
+                        onTap: () {
+                          _mochiTellStory("funny");
+                          setDialogState(() {});
+                        },
                         isSmall: true,
                       ),
                       CuteButton(
                         label: "💕 Chuyện lãng mạn",
-                        onTap: () { _mochiTellStory("romantic"); setDialogState(() {}); },
+                        onTap: () {
+                          _mochiTellStory("romantic");
+                          setDialogState(() {});
+                        },
                         isSmall: true,
                       ),
                     ],
@@ -384,7 +457,12 @@ class _LovePageState extends State<LovePage> with TickerProviderStateMixin {
                   const SizedBox(height: 16),
 
                   // Close button
-                  CuteButton(label: "👋 Tạm biệt Mochi", onTap: () { _mochiInputCtrl.clear(); Navigator.pop(ctx); }),
+                  CuteButton(
+                      label: "👋 Tạm biệt Mochi",
+                      onTap: () {
+                        _mochiInputCtrl.clear();
+                        Navigator.pop(ctx);
+                      }),
                 ],
               ),
             ),
@@ -423,7 +501,12 @@ class _LovePageState extends State<LovePage> with TickerProviderStateMixin {
               decoration: BoxDecoration(
                 color: Colors.white.withValues(alpha: 0.95),
                 borderRadius: BorderRadius.circular(22),
-                boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 12, offset: const Offset(0, 4))],
+                boxShadow: [
+                  BoxShadow(
+                      color: Colors.black12,
+                      blurRadius: 12,
+                      offset: const Offset(0, 4))
+                ],
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
@@ -433,7 +516,10 @@ class _LovePageState extends State<LovePage> with TickerProviderStateMixin {
                   Expanded(
                     child: Text(
                       _currentMochiPopupMessage,
-                      style: const TextStyle(color: Color(0xFFFF7DAE), fontWeight: FontWeight.w500, fontSize: 13),
+                      style: const TextStyle(
+                          color: Color(0xFFFF7DAE),
+                          fontWeight: FontWeight.w500,
+                          fontSize: 13),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -465,7 +551,8 @@ class _LovePageState extends State<LovePage> with TickerProviderStateMixin {
     _popupTimer?.cancel();
     _popupTimer = Timer.periodic(const Duration(seconds: 20), (timer) {
       if (_isPopupShowing) return;
-      String randomMessage = _randomCuteMessages[_rand.nextInt(_randomCuteMessages.length)];
+      String randomMessage =
+          _randomCuteMessages[_rand.nextInt(_randomCuteMessages.length)];
       _showMochiPopup("Mochi: $randomMessage");
     });
   }
@@ -506,7 +593,8 @@ class _LovePageState extends State<LovePage> with TickerProviderStateMixin {
         if (eventsMap != null && eventsMap.isNotEmpty) {
           final firstEvent = eventsMap.values.first;
           setState(() {
-            _memoryRecap = "💞 ${firstEvent['title'] ?? 'Kỷ niệm'} - ${firstEvent['datetime']?.toString().substring(0,10) ?? 'hôm đó'}";
+            _memoryRecap =
+                "💞 ${firstEvent['title'] ?? 'Kỷ niệm'} - ${firstEvent['datetime']?.toString().substring(0, 10) ?? 'hôm đó'}";
           });
         }
       }
@@ -547,7 +635,8 @@ class _LovePageState extends State<LovePage> with TickerProviderStateMixin {
   void _sendQuickFlirt(String text) => _sendMsg(actionText: text);
   void _scrollToBottom() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (_scrollController.hasClients) _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+      if (_scrollController.hasClients)
+        _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
     });
   }
 
@@ -558,12 +647,16 @@ class _LovePageState extends State<LovePage> with TickerProviderStateMixin {
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text("💌 Dặn dò Bé Trắng"),
-        content: TextField(controller: controller, decoration: const InputDecoration(hintText: "Nhập lời nhắn...")),
+        content: TextField(
+            controller: controller,
+            decoration: const InputDecoration(hintText: "Nhập lời nhắn...")),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text("Hủy")),
+          TextButton(
+              onPressed: () => Navigator.pop(ctx), child: const Text("Hủy")),
           TextButton(
             onPressed: () async {
-              if (controller.text.isNotEmpty) await _dbRef.child('be_reminder').set(controller.text);
+              if (controller.text.isNotEmpty)
+                await _dbRef.child('be_reminder').set(controller.text);
               if (mounted) Navigator.pop(ctx);
             },
             child: const Text("Gửi"),
@@ -579,12 +672,16 @@ class _LovePageState extends State<LovePage> with TickerProviderStateMixin {
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text("📌 Lời nhắc chung"),
-        content: TextField(controller: controller, decoration: const InputDecoration(hintText: "Nhập lời nhắc...")),
+        content: TextField(
+            controller: controller,
+            decoration: const InputDecoration(hintText: "Nhập lời nhắc...")),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text("Hủy")),
+          TextButton(
+              onPressed: () => Navigator.pop(ctx), child: const Text("Hủy")),
           TextButton(
             onPressed: () async {
-              if (controller.text.isNotEmpty) await _dbRef.child('reminder').set(controller.text);
+              if (controller.text.isNotEmpty)
+                await _dbRef.child('reminder').set(controller.text);
               if (mounted) Navigator.pop(ctx);
             },
             child: const Text("Gửi"),
@@ -600,12 +697,16 @@ class _LovePageState extends State<LovePage> with TickerProviderStateMixin {
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text("🎁 Gợi ý quà yêu"),
-        content: TextField(controller: controller, decoration: const InputDecoration(hintText: "Bé thích quà gì?")),
+        content: TextField(
+            controller: controller,
+            decoration: const InputDecoration(hintText: "Bé thích quà gì?")),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text("Hủy")),
+          TextButton(
+              onPressed: () => Navigator.pop(ctx), child: const Text("Hủy")),
           TextButton(
             onPressed: () async {
-              if (controller.text.isNotEmpty) await _dbRef.child('currentWish').set(controller.text);
+              if (controller.text.isNotEmpty)
+                await _dbRef.child('currentWish').set(controller.text);
               if (mounted) Navigator.pop(ctx);
             },
             child: const Text("Gửi"),
@@ -621,13 +722,21 @@ class _LovePageState extends State<LovePage> with TickerProviderStateMixin {
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text("🎁 Gửi quà cho Bé"),
-        content: TextField(controller: controller, decoration: const InputDecoration(hintText: "Quà gì? Nhập nội dung...")),
+        content: TextField(
+            controller: controller,
+            decoration:
+                const InputDecoration(hintText: "Quà gì? Nhập nội dung...")),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text("Hủy")),
+          TextButton(
+              onPressed: () => Navigator.pop(ctx), child: const Text("Hủy")),
           TextButton(
             onPressed: () async {
               if (controller.text.isNotEmpty) {
-                await _dbRef.child('gift').set({'available': true, 'content': controller.text, 'opened': false});
+                await _dbRef.child('gift').set({
+                  'available': true,
+                  'content': controller.text,
+                  'opened': false
+                });
                 if (mounted) _showSnackbar("Đã gửi quà! Bé sẽ nhận được.");
               }
               if (mounted) Navigator.pop(ctx);
@@ -649,7 +758,9 @@ class _LovePageState extends State<LovePage> with TickerProviderStateMixin {
           actions: [
             TextButton(
               onPressed: () async {
-                await _dbRef.child('gift').set({'available': false, 'content': '', 'opened': true});
+                await _dbRef
+                    .child('gift')
+                    .set({'available': false, 'content': '', 'opened': true});
                 _showSnackbar("Cảm ơn Gấu nhé! 💖");
                 if (mounted) Navigator.pop(ctx);
               },
@@ -669,9 +780,13 @@ class _LovePageState extends State<LovePage> with TickerProviderStateMixin {
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text("😢 Ngày buồn"),
-        content: TextField(controller: controller, keyboardType: TextInputType.number, decoration: const InputDecoration(hintText: "Số ngày buồn")),
+        content: TextField(
+            controller: controller,
+            keyboardType: TextInputType.number,
+            decoration: const InputDecoration(hintText: "Số ngày buồn")),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text("Hủy")),
+          TextButton(
+              onPressed: () => Navigator.pop(ctx), child: const Text("Hủy")),
           TextButton(
             onPressed: () async {
               int? days = int.tryParse(controller.text);
@@ -690,9 +805,13 @@ class _LovePageState extends State<LovePage> with TickerProviderStateMixin {
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text("💡 Góp ý tính năng mới"),
-        content: TextField(controller: _featureCtrl, maxLines: 3, decoration: const InputDecoration(hintText: "Nhập ý tưởng...")),
+        content: TextField(
+            controller: _featureCtrl,
+            maxLines: 3,
+            decoration: const InputDecoration(hintText: "Nhập ý tưởng...")),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text("Hủy")),
+          TextButton(
+              onPressed: () => Navigator.pop(ctx), child: const Text("Hủy")),
           TextButton(
             onPressed: () async {
               final text = _featureCtrl.text.trim();
@@ -723,7 +842,8 @@ class _LovePageState extends State<LovePage> with TickerProviderStateMixin {
       'timestamp': ServerValue.timestamp,
       'resolved': false,
     });
-    _showNotification("🚨 KHẨN CẤP!", "$_userName cần sự giúp đỡ ngay lập tức! 🚨");
+    _showNotification(
+        "🚨 KHẨN CẤP!", "$_userName cần sự giúp đỡ ngay lập tức! 🚨");
     _showSnackbar("Đã gửi tín hiệu khẩn cấp!");
     await _clickPlayer.play(AssetSource('music/emergency.mp3'));
     Future.delayed(const Duration(minutes: 2), () {
@@ -739,24 +859,36 @@ class _LovePageState extends State<LovePage> with TickerProviderStateMixin {
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            TextField(controller: _eventTitleCtrl, decoration: const InputDecoration(labelText: "Tên sự kiện")),
-            TextField(controller: _eventDescCtrl, decoration: const InputDecoration(labelText: "Mô tả")),
+            TextField(
+                controller: _eventTitleCtrl,
+                decoration: const InputDecoration(labelText: "Tên sự kiện")),
+            TextField(
+                controller: _eventDescCtrl,
+                decoration: const InputDecoration(labelText: "Mô tả")),
             const SizedBox(height: 8),
             Row(children: [
-              Expanded(child: Text("Ngày: ${_selectedEventDate.day}/${_selectedEventDate.month}/${_selectedEventDate.year}")),
+              Expanded(
+                  child: Text(
+                      "Ngày: ${_selectedEventDate.day}/${_selectedEventDate.month}/${_selectedEventDate.year}")),
               TextButton(
                 onPressed: () async {
-                  final date = await showDatePicker(context: ctx, firstDate: DateTime.now(), lastDate: DateTime(2030));
+                  final date = await showDatePicker(
+                      context: ctx,
+                      firstDate: DateTime.now(),
+                      lastDate: DateTime(2030));
                   if (date != null) setState(() => _selectedEventDate = date);
                 },
                 child: const Text("Chọn ngày"),
               ),
             ]),
             Row(children: [
-              Expanded(child: Text("Giờ: ${_selectedEventTime.hour}:${_selectedEventTime.minute}")),
+              Expanded(
+                  child: Text(
+                      "Giờ: ${_selectedEventTime.hour}:${_selectedEventTime.minute}")),
               TextButton(
                 onPressed: () async {
-                  final time = await showTimePicker(context: ctx, initialTime: _selectedEventTime);
+                  final time = await showTimePicker(
+                      context: ctx, initialTime: _selectedEventTime);
                   if (time != null) setState(() => _selectedEventTime = time);
                 },
                 child: const Text("Chọn giờ"),
@@ -765,7 +897,8 @@ class _LovePageState extends State<LovePage> with TickerProviderStateMixin {
           ],
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text("Hủy")),
+          TextButton(
+              onPressed: () => Navigator.pop(ctx), child: const Text("Hủy")),
           TextButton(onPressed: _addEventWithTime, child: const Text("Thêm")),
         ],
       ),
@@ -775,23 +908,30 @@ class _LovePageState extends State<LovePage> with TickerProviderStateMixin {
   Future<void> _addEventWithTime() async {
     if (_eventTitleCtrl.text.isEmpty) return;
     final dateTime = DateTime(
-      _selectedEventDate.year, _selectedEventDate.month, _selectedEventDate.day,
-      _selectedEventTime.hour, _selectedEventTime.minute,
+      _selectedEventDate.year,
+      _selectedEventDate.month,
+      _selectedEventDate.day,
+      _selectedEventTime.hour,
+      _selectedEventTime.minute,
     );
     await _dbRef.child('events').push().set({
       'title': _eventTitleCtrl.text,
       'desc': _eventDescCtrl.text,
       'datetime': dateTime.toIso8601String(),
       'date': _selectedEventDate.toIso8601String().split('T').first,
-      'time': "${_selectedEventTime.hour.toString().padLeft(2,'0')}:${_selectedEventTime.minute.toString().padLeft(2,'0')}",
+      'time':
+          "${_selectedEventTime.hour.toString().padLeft(2, '0')}:${_selectedEventTime.minute.toString().padLeft(2, '0')}",
       'createdBy': _userName,
       'timestamp': ServerValue.timestamp,
     });
     _eventTitleCtrl.clear();
     _eventDescCtrl.clear();
     _showSnackbar("Đã thêm sự kiện");
-    final partner = _userName.contains("Gấu") ? "Bé Trắng 1 tuổi rưỡi" : "Gấu bông 3 tuổi rưỡi";
-    _showNotification("📅 Sự kiện mới", "$_userName vừa thêm sự kiện: ${_eventTitleCtrl.text}");
+    final partner = _userName.contains("Gấu")
+        ? "Bé Trắng 1 tuổi rưỡi"
+        : "Gấu bông 3 tuổi rưỡi";
+    _showNotification("📅 Sự kiện mới",
+        "$_userName vừa thêm sự kiện: ${_eventTitleCtrl.text}");
   }
 
   // -------------------- WATER REMINDER --------------------
@@ -808,16 +948,20 @@ class _LovePageState extends State<LovePage> with TickerProviderStateMixin {
   void _scheduleWater() {
     _waterReminderTimer?.cancel();
     final now = DateTime.now();
-    DateTime next = DateTime(now.year, now.month, now.day, _waterHour, _waterMinute);
+    DateTime next =
+        DateTime(now.year, now.month, now.day, _waterHour, _waterMinute);
     if (next.isBefore(now)) next = next.add(const Duration(days: 1));
     _waterReminderTimer = Timer(next.difference(now), () {
-      _showNotification("💧 Nhắc uống nước", "Yêu ơi, đến giờ uống nước rồi! 🚰💖");
+      _showNotification(
+          "💧 Nhắc uống nước", "Yêu ơi, đến giờ uống nước rồi! 🚰💖");
       _scheduleWater();
     });
   }
 
   void _showWaterTimePicker() async {
-    final t = await showTimePicker(context: context, initialTime: TimeOfDay(hour: _waterHour, minute: _waterMinute));
+    final t = await showTimePicker(
+        context: context,
+        initialTime: TimeOfDay(hour: _waterHour, minute: _waterMinute));
     if (t != null) {
       final prefs = await SharedPreferences.getInstance();
       setState(() {
@@ -836,7 +980,8 @@ class _LovePageState extends State<LovePage> with TickerProviderStateMixin {
   }
 
   void _showNotification(String title, String body) {
-    if (html.Notification.supported && html.Notification.permission == 'granted') {
+    if (html.Notification.supported &&
+        html.Notification.permission == 'granted') {
       html.Notification(title, body: body);
     }
     _showSnackbar("$title: $body");
@@ -844,18 +989,30 @@ class _LovePageState extends State<LovePage> with TickerProviderStateMixin {
 
   void _showSnackbar(String msg) {
     if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg), duration: const Duration(seconds: 3)));
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(msg), duration: const Duration(seconds: 3)));
     }
   }
 
   // -------------------- PRESENCE, TYPING, BUBBLES --------------------
   void _updatePresence(bool online) async {
     final now = DateTime.now().toIso8601String();
-    await _dbRef.child('presence').child(_userName).set({'online': online, 'lastSeen': now});
+    await _dbRef
+        .child('presence')
+        .child(_userName)
+        .set({'online': online, 'lastSeen': now});
     if (online) {
-      await _dbRef.child('loginHistory').child(_userName).push().set({'loginTime': now, 'type': 'login'});
+      await _dbRef
+          .child('loginHistory')
+          .child(_userName)
+          .push()
+          .set({'loginTime': now, 'type': 'login'});
     } else {
-      await _dbRef.child('loginHistory').child(_userName).push().set({'logoutTime': now, 'type': 'logout'});
+      await _dbRef
+          .child('loginHistory')
+          .child(_userName)
+          .push()
+          .set({'logoutTime': now, 'type': 'logout'});
     }
   }
 
@@ -868,9 +1025,13 @@ class _LovePageState extends State<LovePage> with TickerProviderStateMixin {
   }
 
   void _listenTyping() {
-    String partner = _userName.contains("Gấu") ? "Bé Trắng 1 tuổi rưỡi" : "Gấu bông 3 tuổi rưỡi";
-    _subscriptions.add(_dbRef.child('typing').child(partner).onValue.listen((event) {
-      if (mounted) setState(() => _isPartnerTyping = event.snapshot.value == true);
+    String partner = _userName.contains("Gấu")
+        ? "Bé Trắng 1 tuổi rưỡi"
+        : "Gấu bông 3 tuổi rưỡi";
+    _subscriptions
+        .add(_dbRef.child('typing').child(partner).onValue.listen((event) {
+      if (mounted)
+        setState(() => _isPartnerTyping = event.snapshot.value == true);
     }));
   }
 
@@ -878,19 +1039,32 @@ class _LovePageState extends State<LovePage> with TickerProviderStateMixin {
     _bubbleTimerGen = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (!mounted) return;
       final size = MediaQuery.of(context).size;
-      final bubbleId = DateTime.now().millisecondsSinceEpoch + _rand.nextInt(1000);
+      final bubbleId =
+          DateTime.now().millisecondsSinceEpoch + _rand.nextInt(1000);
       final bubble = Bubble(
         id: bubbleId,
-        position: Offset(_rand.nextDouble() * (size.width - 50), size.height + 20),
-        emoji: ["❤️", "😘", "🥺", "💖", "😊", "🧸", "🐰", "💕", "🎵", "💋"][_rand.nextInt(10)],
+        position:
+            Offset(_rand.nextDouble() * (size.width - 50), size.height + 20),
+        emoji: [
+          "❤️",
+          "😘",
+          "🥺",
+          "💖",
+          "😊",
+          "🧸",
+          "🐰",
+          "💕",
+          "🎵",
+          "💋"
+        ][_rand.nextInt(10)],
       );
       setState(() => bubbles.add(bubble));
       Future.delayed(const Duration(seconds: 8), () {
-        if (mounted) setState(() => bubbles.removeWhere((b) => b.id == bubbleId));
+        if (mounted)
+          setState(() => bubbles.removeWhere((b) => b.id == bubbleId));
       });
     });
   }
-
 
   // -------------------- MUSIC PLAYER --------------------
   void _playRandomSong() {
@@ -921,7 +1095,11 @@ class _LovePageState extends State<LovePage> with TickerProviderStateMixin {
   void _playSongByFile(String fileName) async {
     try {
       final f = fileName.split('/').last;
-      final idx = songs.indexWhere((s) => (s['file']?.toString().toLowerCase() ?? '').contains(f.toLowerCase()) || (s['name']?.toString().toLowerCase() ?? '').contains(f.toLowerCase()));
+      final idx = songs.indexWhere((s) =>
+          (s['file']?.toString().toLowerCase() ?? '')
+              .contains(f.toLowerCase()) ||
+          (s['name']?.toString().toLowerCase() ?? '')
+              .contains(f.toLowerCase()));
       if (idx != -1) {
         _playSong(idx);
         return;
@@ -953,7 +1131,9 @@ class _LovePageState extends State<LovePage> with TickerProviderStateMixin {
 
   void _playPrev() {
     if (songs.isEmpty) return;
-    final prev = (_currentSongIndex - 1) < 0 ? songs.length - 1 : (_currentSongIndex - 1);
+    final prev = (_currentSongIndex - 1) < 0
+        ? songs.length - 1
+        : (_currentSongIndex - 1);
     _playSong(prev);
   }
 
@@ -963,6 +1143,184 @@ class _LovePageState extends State<LovePage> with TickerProviderStateMixin {
       _isPlaying = false;
       _currentSongIndex = -1;
     });
+  }
+
+  String get _currentSongName {
+    if (_currentSongIndex >= 0 && _currentSongIndex < songs.length) {
+      return songs[_currentSongIndex]['name'] ?? 'Bài yêu';
+    }
+    return 'Nhạc yêu';
+  }
+
+  void _toggleMusicPanel() {
+    setState(() {
+      _musicExpanded = !_musicExpanded;
+    });
+  }
+
+  void _togglePlayPause() {
+    if (_currentSongIndex == -1) {
+      _playRandomSong();
+      return;
+    }
+    _pauseResume();
+  }
+
+  void _showPlaylistDialog() {
+    showDialog(
+      context: context,
+      builder: (ctx) {
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+          title: const Row(
+            children: [
+              Icon(Icons.music_note, color: Color(0xFFFF7DAE)),
+              SizedBox(width: 10),
+              Expanded(
+                  child: Text('Thư viện nhạc',
+                      style: TextStyle(fontWeight: FontWeight.bold))),
+            ],
+          ),
+          content: SizedBox(
+            width: double.maxFinite,
+            child: ListView.separated(
+              shrinkWrap: true,
+              itemCount: songs.length,
+              separatorBuilder: (_, __) => const Divider(height: 1),
+              itemBuilder: (ctx, index) {
+                final isCurrent = index == _currentSongIndex;
+                return ListTile(
+                  leading: Icon(
+                    isCurrent && _isPlaying
+                        ? Icons.equalizer
+                        : Icons.music_note,
+                    color: isCurrent ? const Color(0xFFFF7DAE) : Colors.grey,
+                  ),
+                  title: Text(songs[index]['name'] ?? 'Unknown',
+                      style: TextStyle(
+                          fontWeight:
+                              isCurrent ? FontWeight.bold : FontWeight.normal)),
+                  trailing: isCurrent
+                      ? const Icon(Icons.play_arrow, color: Color(0xFFFF7DAE))
+                      : null,
+                  onTap: () {
+                    Navigator.pop(ctx);
+                    _playSong(index);
+                  },
+                );
+              },
+            ),
+          ),
+          actions: [
+            TextButton(
+                onPressed: () => Navigator.pop(ctx), child: const Text('Đóng')),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildMusicPlayerButton(BuildContext context) {
+    final isExpanded = _musicExpanded;
+    final hasSong = _currentSongIndex >= 0 && _currentSongIndex < songs.length;
+    return SafeArea(
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 280),
+        width: isExpanded ? 280 : 54,
+        height: 54,
+        curve: Curves.easeOutCubic,
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
+              colors: [Color(0xFFFFB4D6), Color(0xFFFF7DAE)]),
+          borderRadius: BorderRadius.circular(28),
+          boxShadow: [
+            BoxShadow(
+                color: Colors.pink.withOpacity(0.18),
+                blurRadius: 18,
+                offset: const Offset(0, 8))
+          ],
+        ),
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            borderRadius: BorderRadius.circular(28),
+            onTap: _toggleMusicPanel,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Row(
+                children: [
+                  Container(
+                    width: 44,
+                    height: 44,
+                    decoration: const BoxDecoration(
+                        color: Colors.white, shape: BoxShape.circle),
+                    child: IconButton(
+                      icon: Icon(_isPlaying ? Icons.pause : Icons.play_arrow,
+                          color: const Color(0xFFFF7DAE)),
+                      onPressed: () {
+                        _togglePlayPause();
+                      },
+                    ),
+                  ),
+                  if (isExpanded) ...[
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(_currentSongName,
+                              style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 13),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1),
+                          Text(
+                            _isPlaying
+                                ? 'Đang phát'
+                                : hasSong
+                                    ? 'Tạm dừng'
+                                    : 'Chạm để bật',
+                            style: const TextStyle(
+                                color: Colors.white70, fontSize: 11),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.skip_previous,
+                              color: Colors.white, size: 20),
+                          onPressed: _playPrev,
+                          tooltip: 'Trước',
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.skip_next,
+                              color: Colors.white, size: 20),
+                          onPressed: _playNext,
+                          tooltip: 'Tiếp',
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.queue_music,
+                              color: Colors.white, size: 20),
+                          onPressed: _showPlaylistDialog,
+                          tooltip: 'Danh sách',
+                        ),
+                      ],
+                    ),
+                  ],
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   void _sendLuluMessage(String text) {
@@ -1009,20 +1367,31 @@ class _LovePageState extends State<LovePage> with TickerProviderStateMixin {
             return Container(
               decoration: BoxDecoration(
                 color: CuteColors.background,
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+                borderRadius:
+                    const BorderRadius.vertical(top: Radius.circular(24)),
               ),
               padding: const EdgeInsets.all(12),
               child: Column(
                 children: [
                   const SizedBox(height: 6),
-                  Container(width: 40, height: 4, decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(4))),
+                  Container(
+                      width: 40,
+                      height: 4,
+                      decoration: BoxDecoration(
+                          color: Colors.grey[300],
+                          borderRadius: BorderRadius.circular(4))),
                   const SizedBox(height: 8),
                   Row(children: [
-                    ClipOval(child: Image.asset('assets/lulu.png', width: 40, height: 40)),
+                    ClipOval(
+                        child: Image.asset('assets/lulu.png',
+                            width: 40, height: 40)),
                     const SizedBox(width: 8),
-                    const Text('LuLu — Trợ lý dễ thương', style: TextStyle(fontWeight: FontWeight.bold)),
+                    const Text('LuLu — Trợ lý dễ thương',
+                        style: TextStyle(fontWeight: FontWeight.bold)),
                     const Spacer(),
-                    IconButton(onPressed: () => Navigator.pop(ctx), icon: const Icon(Icons.close)),
+                    IconButton(
+                        onPressed: () => Navigator.pop(ctx),
+                        icon: const Icon(Icons.close)),
                   ]),
                   const SizedBox(height: 8),
                   Expanded(
@@ -1031,16 +1400,70 @@ class _LovePageState extends State<LovePage> with TickerProviderStateMixin {
                       children: [
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 8.0),
-                          child: Text('Chào! Hỏi LuLu gì đi — có thể bật nhạc, gợi ý món ăn, hoặc quậy quậy 😄', style: TextStyle(color: CuteColors.textLight, fontSize: 13)),
+                          child: Text(
+                              'Chào! Hỏi LuLu gì đi — có thể bật nhạc, gợi ý món ăn, hoặc quậy quậy 😄',
+                              style: TextStyle(
+                                  color: CuteColors.textLight, fontSize: 13)),
                         ),
-                        // Simple quick controls
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        // Player quick actions and suggestions
+                        if (_currentSongIndex >= 0)
+                          Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 12),
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(18),
+                                border:
+                                    Border.all(color: Colors.pink.shade100)),
+                            child: Row(
+                              children: [
+                                const Icon(Icons.music_note,
+                                    color: Color(0xFFFF7DAE)),
+                                const SizedBox(width: 10),
+                                Expanded(
+                                  child: Text(
+                                    'Đang phát: ${_currentSongName}',
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.w600),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                                Text(_isPlaying ? '▶️' : '⏸️',
+                                    style: const TextStyle(fontSize: 16)),
+                              ],
+                            ),
+                          ),
+                        const SizedBox(height: 8),
+                        Wrap(
+                          spacing: 8,
+                          runSpacing: 8,
                           children: [
-                            ElevatedButton.icon(onPressed: () => _playPrev(), icon: const Icon(Icons.skip_previous), label: const Text('Prev')),
-                            ElevatedButton.icon(onPressed: () => _pauseMusic(), icon: const Icon(Icons.pause), label: const Text('Pause')),
-                            ElevatedButton.icon(onPressed: () => _stopMusic(), icon: const Icon(Icons.stop), label: const Text('Stop')),
-                            ElevatedButton.icon(onPressed: () => _playNext(), icon: const Icon(Icons.skip_next), label: const Text('Next')),
+                            ActionChip(
+                              label: const Text('Bật nhạc'),
+                              backgroundColor: const Color(0xFFFF7DAE),
+                              labelStyle: const TextStyle(color: Colors.white),
+                              onPressed: () => _sendLuluMessage('Bật nhạc'),
+                            ),
+                            ActionChip(
+                              label: const Text('Tiếp bài'),
+                              backgroundColor: const Color(0xFFFF7DAE),
+                              labelStyle: const TextStyle(color: Colors.white),
+                              onPressed: () => _sendLuluMessage('Tiếp bài'),
+                            ),
+                            ActionChip(
+                              label: const Text('Tạm dừng'),
+                              backgroundColor: const Color(0xFFFF7DAE),
+                              labelStyle: const TextStyle(color: Colors.white),
+                              onPressed: () =>
+                                  _sendLuluMessage('Tạm dừng nhạc'),
+                            ),
+                            ActionChip(
+                              label: const Text('Gợi ý ăn'),
+                              backgroundColor: const Color(0xFFFF7DAE),
+                              labelStyle: const TextStyle(color: Colors.white),
+                              onPressed: () => _sendLuluMessage('Gợi ý ăn'),
+                            ),
                           ],
                         ),
                         const SizedBox(height: 12),
@@ -1048,30 +1471,47 @@ class _LovePageState extends State<LovePage> with TickerProviderStateMixin {
                         if (_luluHistory.isEmpty)
                           Container(
                             padding: const EdgeInsets.all(14),
-                            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16)),
-                            child: const Text('LuLu sẵn sàng trò chuyện nha! Hỏi LuLu gì đi nào...', style: TextStyle(fontSize: 14)),
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(16)),
+                            child: const Text(
+                                'LuLu sẵn sàng trò chuyện nha! Hỏi LuLu gì đi nào...',
+                                style: TextStyle(fontSize: 14)),
                           )
                         else
                           Column(
                             children: _luluHistory.map((msg) {
                               final isUser = msg['sender'] == 'Bạn';
                               return Align(
-                                alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
+                                alignment: isUser
+                                    ? Alignment.centerRight
+                                    : Alignment.centerLeft,
                                 child: Container(
-                                  margin: const EdgeInsets.symmetric(vertical: 6),
-                                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                                  margin:
+                                      const EdgeInsets.symmetric(vertical: 6),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 14, vertical: 12),
                                   decoration: BoxDecoration(
-                                    color: isUser ? const Color(0xFFFFD6E7) : Colors.white,
+                                    color: isUser
+                                        ? const Color(0xFFFFD6E7)
+                                        : Colors.white,
                                     borderRadius: BorderRadius.circular(20),
                                   ),
-                                  child: Text(msg['text'] ?? '', style: TextStyle(color: isUser ? const Color(0xFFFF7DAE) : Colors.black87)),
+                                  child: Text(msg['text'] ?? '',
+                                      style: TextStyle(
+                                          color: isUser
+                                              ? const Color(0xFFFF7DAE)
+                                              : Colors.black87)),
                                 ),
                               );
                             }).toList(),
                           ),
                         const SizedBox(height: 12),
                         if (luluAI.memory.isNotEmpty)
-                          Text('Ghi nhớ: ${luluAI.memory.values.take(6).join(" • ")}', style: const TextStyle(fontSize: 12, color: Colors.grey)),
+                          Text(
+                              'Ghi nhớ: ${luluAI.memory.values.take(6).join(" • ")}',
+                              style: const TextStyle(
+                                  fontSize: 12, color: Colors.grey)),
                         const SizedBox(height: 80),
                       ],
                     ),
@@ -1083,7 +1523,15 @@ class _LovePageState extends State<LovePage> with TickerProviderStateMixin {
                         Expanded(
                           child: TextField(
                             controller: _luluInputCtrl,
-                            decoration: InputDecoration(hintText: 'Hỏi LuLu...', filled: true, fillColor: Colors.white, border: OutlineInputBorder(borderRadius: BorderRadius.circular(24), borderSide: BorderSide.none), contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12)),
+                            decoration: InputDecoration(
+                                hintText: 'Hỏi LuLu...',
+                                filled: true,
+                                fillColor: Colors.white,
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(24),
+                                    borderSide: BorderSide.none),
+                                contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 16, vertical: 12)),
                             onSubmitted: (v) async {
                               if (v.trim().isEmpty) return;
                               _luluInputCtrl.clear();
@@ -1099,7 +1547,8 @@ class _LovePageState extends State<LovePage> with TickerProviderStateMixin {
                             _luluInputCtrl.clear();
                             _sendLuluMessage(v);
                           },
-                          style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFFF7DAE)),
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFFFF7DAE)),
                           child: const Text('Gửi'),
                         ),
                       ],
@@ -1130,19 +1579,25 @@ class _LovePageState extends State<LovePage> with TickerProviderStateMixin {
 
   // -------------------- FIREBASE LISTENERS --------------------
   void _listenData() {
-    _subscriptions.add(_dbRef.child('messages').onChildAdded.listen((event) async {
+    _subscriptions
+        .add(_dbRef.child('messages').onChildAdded.listen((event) async {
       if (!mounted) return;
       _scrollToBottom();
       final data = event.snapshot.value as Map?;
-      if (data != null && _userName.isNotEmpty && data['sender'] != _userName && _userInteracted) {
+      if (data != null &&
+          _userName.isNotEmpty &&
+          data['sender'] != _userName &&
+          _userInteracted) {
         await _notiPlayer.play(AssetSource('music/notification.mp3'));
       }
     }));
     _subscriptions.add(_dbRef.child('be_reminder').onValue.listen((event) {
-      if (event.snapshot.value != null && mounted) setState(() => _beReminder = event.snapshot.value.toString());
+      if (event.snapshot.value != null && mounted)
+        setState(() => _beReminder = event.snapshot.value.toString());
     }));
     _subscriptions.add(_dbRef.child('reminder').onValue.listen((event) {
-      if (event.snapshot.value != null && mounted) setState(() => _currentReminder = event.snapshot.value.toString());
+      if (event.snapshot.value != null && mounted)
+        setState(() => _currentReminder = event.snapshot.value.toString());
     }));
     _subscriptions.add(_dbRef.child('gift').onValue.listen((event) {
       final data = event.snapshot.value as Map?;
@@ -1151,7 +1606,9 @@ class _LovePageState extends State<LovePage> with TickerProviderStateMixin {
           _isGiftAvailable = data['available'] ?? false;
           _giftContent = data['content'] ?? "";
         });
-        if (data['available'] == true && data['opened'] == false && !_userName.contains("Gấu")) {
+        if (data['available'] == true &&
+            data['opened'] == false &&
+            !_userName.contains("Gấu")) {
           _showSnackbar("🎁 Bé có quà mới từ Gấu!");
         }
       }
@@ -1172,29 +1629,48 @@ class _LovePageState extends State<LovePage> with TickerProviderStateMixin {
       }
     }));
     _subscriptions.add(_dbRef.child('mochi/status').onValue.listen((event) {
-      if (event.snapshot.value != null && mounted) setState(() => _mochiStatus = event.snapshot.value.toString());
+      if (event.snapshot.value != null && mounted)
+        setState(() => _mochiStatus = event.snapshot.value.toString());
     }));
     _subscriptions.add(_dbRef.child('currentWish').onValue.listen((event) {
-      if (event.snapshot.value != null && mounted) setState(() => _currentWish = event.snapshot.value.toString());
+      if (event.snapshot.value != null && mounted)
+        setState(() => _currentWish = event.snapshot.value.toString());
     }));
     _subscriptions.add(_dbRef.child('sadDays').onValue.listen((event) {
-      if (event.snapshot.value != null && mounted) setState(() => _sadDays = (event.snapshot.value as int?) ?? 0);
+      if (event.snapshot.value != null && mounted)
+        setState(() => _sadDays = (event.snapshot.value as int?) ?? 0);
     }));
 
     bool previousGauOnline = false;
     bool previousBeOnline = false;
-    _subscriptions.add(_dbRef.child('presence').child('Gấu bông 3 tuổi rưỡi').child('online').onValue.listen((event) {
+    _subscriptions.add(_dbRef
+        .child('presence')
+        .child('Gấu bông 3 tuổi rưỡi')
+        .child('online')
+        .onValue
+        .listen((event) {
       final newValue = event.snapshot.value == true;
-      if (previousGauOnline != newValue && newValue == true && _userName.contains("Bé")) {
-        _showNotification("🔔 Gấu bông vừa vào app", "Hãy cùng trò chuyện nào 💖");
+      if (previousGauOnline != newValue &&
+          newValue == true &&
+          _userName.contains("Bé")) {
+        _showNotification(
+            "🔔 Gấu bông vừa vào app", "Hãy cùng trò chuyện nào 💖");
       }
       previousGauOnline = newValue;
       setState(() => _isGauOnline = newValue);
     }));
-    _subscriptions.add(_dbRef.child('presence').child('Bé Trắng 1 tuổi rưỡi').child('online').onValue.listen((event) {
+    _subscriptions.add(_dbRef
+        .child('presence')
+        .child('Bé Trắng 1 tuổi rưỡi')
+        .child('online')
+        .onValue
+        .listen((event) {
       final newValue = event.snapshot.value == true;
-      if (previousBeOnline != newValue && newValue == true && _userName.contains("Gấu")) {
-        _showNotification("🔔 Bé Trắng vừa vào app", "Chúc hai bạn có phút giây ngọt ngào 💖");
+      if (previousBeOnline != newValue &&
+          newValue == true &&
+          _userName.contains("Gấu")) {
+        _showNotification("🔔 Bé Trắng vừa vào app",
+            "Chúc hai bạn có phút giây ngọt ngào 💖");
       }
       previousBeOnline = newValue;
       setState(() => _isBeOnline = newValue);
@@ -1223,8 +1699,12 @@ class _LovePageState extends State<LovePage> with TickerProviderStateMixin {
         title: const Text("🧸 Chào cặp đôi yêu quý 🐰"),
         content: const Text("Ai đang dùng app? Chọn vai trò nhé:"),
         actions: [
-          TextButton(onPressed: () => _setIdentity("Gấu bông 3 tuổi rưỡi"), child: const Text("🧸 Gấu bông")),
-          TextButton(onPressed: () => _setIdentity("Bé Trắng 1 tuổi rưỡi"), child: const Text("🐰 Bé Trắng")),
+          TextButton(
+              onPressed: () => _setIdentity("Gấu bông 3 tuổi rưỡi"),
+              child: const Text("🧸 Gấu bông")),
+          TextButton(
+              onPressed: () => _setIdentity("Bé Trắng 1 tuổi rưỡi"),
+              child: const Text("🐰 Bé Trắng")),
         ],
       ),
     );
@@ -1244,7 +1724,12 @@ class _LovePageState extends State<LovePage> with TickerProviderStateMixin {
     _subscriptions.add(_dbRef.child('.info/connected').onValue.listen((event) {
       if (event.snapshot.value == true) {
         _dbRef.child('presence').child(_userName).child('online').set(true);
-        _dbRef.child('presence').child(_userName).child('online').onDisconnect().set(false);
+        _dbRef
+            .child('presence')
+            .child(_userName)
+            .child('online')
+            .onDisconnect()
+            .set(false);
         _updatePresence(true);
       }
     }));
@@ -1261,20 +1746,36 @@ class _LovePageState extends State<LovePage> with TickerProviderStateMixin {
         children: [
           Column(
             children: [
-              CircleAvatar(radius: 40, backgroundImage: AssetImage("assets/gau_bong.png")),
+              CircleAvatar(
+                  radius: 40,
+                  backgroundImage: AssetImage("assets/gau_bong.png")),
               const SizedBox(height: 4),
-              Text("Gấu", style: TextStyle(color: Color(0xFFFF7DAE), fontWeight: FontWeight.bold)),
+              Text("Gấu",
+                  style: TextStyle(
+                      color: Color(0xFFFF7DAE), fontWeight: FontWeight.bold)),
               if (_isGauOnline)
-                Container(width: 8, height: 8, decoration: BoxDecoration(color: Colors.green, shape: BoxShape.circle)),
+                Container(
+                    width: 8,
+                    height: 8,
+                    decoration: BoxDecoration(
+                        color: Colors.green, shape: BoxShape.circle)),
             ],
           ),
           Column(
             children: [
-              CircleAvatar(radius: 40, backgroundImage: AssetImage("assets/be_trang.png")),
+              CircleAvatar(
+                  radius: 40,
+                  backgroundImage: AssetImage("assets/be_trang.png")),
               const SizedBox(height: 4),
-              Text("Bé Trắng", style: TextStyle(color: Color(0xFFFF7DAE), fontWeight: FontWeight.bold)),
+              Text("Bé Trắng",
+                  style: TextStyle(
+                      color: Color(0xFFFF7DAE), fontWeight: FontWeight.bold)),
               if (_isBeOnline)
-                Container(width: 8, height: 8, decoration: BoxDecoration(color: Colors.green, shape: BoxShape.circle)),
+                Container(
+                    width: 8,
+                    height: 8,
+                    decoration: BoxDecoration(
+                        color: Colors.green, shape: BoxShape.circle)),
             ],
           ),
         ],
@@ -1291,16 +1792,28 @@ class _LovePageState extends State<LovePage> with TickerProviderStateMixin {
           child: isNarrow
               ? Column(
                   children: [
-                    _buildStatCard("😊 Hạnh phúc", "$happyDays%", "🥺 Nhớ nhau: $_missingLevel", "❤️ Mood hôm nay: $_moodText"),
+                    _buildStatCard(
+                        "😊 Hạnh phúc",
+                        "$happyDays%",
+                        "🥺 Nhớ nhau: $_missingLevel",
+                        "❤️ Mood hôm nay: $_moodText"),
                     const SizedBox(height: 12),
-                    _buildStatCard("🤖 Mochi", _aiSuggestion, "📌 Nhiệm vụ: $_dailyMission", ""),
+                    _buildStatCard("🤖 Mochi", _aiSuggestion,
+                        "📌 Nhiệm vụ: $_dailyMission", ""),
                   ],
                 )
               : Row(
                   children: [
-                    Expanded(child: _buildStatCard("😊 Hạnh phúc", "$happyDays%", "🥺 Nhớ nhau: $_missingLevel", "❤️ Mood hôm nay: $_moodText")),
+                    Expanded(
+                        child: _buildStatCard(
+                            "😊 Hạnh phúc",
+                            "$happyDays%",
+                            "🥺 Nhớ nhau: $_missingLevel",
+                            "❤️ Mood hôm nay: $_moodText")),
                     const SizedBox(width: 12),
-                    Expanded(child: _buildStatCard("🤖 Mochi", _aiSuggestion, "📌 Nhiệm vụ: $_dailyMission", "")),
+                    Expanded(
+                        child: _buildStatCard("🤖 Mochi", _aiSuggestion,
+                            "📌 Nhiệm vụ: $_dailyMission", "")),
                   ],
                 ),
         );
@@ -1308,26 +1821,39 @@ class _LovePageState extends State<LovePage> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildStatCard(String title, String value, String line1, String line2) {
+  Widget _buildStatCard(
+      String title, String value, String line1, String line2) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white.withValues(alpha: 0.7),
         borderRadius: BorderRadius.circular(24),
         border: Border.all(color: const Color(0xFFFFD6E7)),
-        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 8, offset: Offset(0, 2))],
+        boxShadow: [
+          BoxShadow(
+              color: Colors.black.withValues(alpha: 0.05),
+              blurRadius: 8,
+              offset: Offset(0, 2))
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
-          Text(value, style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Color(0xFFFF7DAE))),
+          Text(value,
+              style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFFFF7DAE))),
           const SizedBox(height: 8),
-          if (line1.isNotEmpty) Text(line1, style: const TextStyle(fontSize: 13)),
+          if (line1.isNotEmpty)
+            Text(line1, style: const TextStyle(fontSize: 13)),
           if (line2.isNotEmpty) ...[
             const SizedBox(height: 8),
-            Text(line2, style: const TextStyle(fontSize: 12, fontStyle: FontStyle.italic)),
+            Text(line2,
+                style:
+                    const TextStyle(fontSize: 12, fontStyle: FontStyle.italic)),
           ],
         ],
       ),
@@ -1344,7 +1870,8 @@ class _LovePageState extends State<LovePage> with TickerProviderStateMixin {
         children: [
           _quickActionButton("❤️ Nhớ em", () => _sendQuickFlirt("Nhớ em")),
           _quickActionButton("😘 Hôn", () => _sendQuickFlirt("Hôn em")),
-          _quickActionButton("🎤 Voice", () => _showSnackbar("Tính năng voice đang phát triển 📢")),
+          _quickActionButton("🎤 Voice",
+              () => _showSnackbar("Tính năng voice đang phát triển 📢")),
           _quickActionButton("🎁 Surprise", () => _sendRandomSuggestion()),
         ],
       ),
@@ -1357,15 +1884,25 @@ class _LovePageState extends State<LovePage> with TickerProviderStateMixin {
       child: TweenAnimationBuilder<double>(
         tween: Tween(begin: 1.0, end: 1.0),
         duration: const Duration(milliseconds: 200),
-        builder: (context, scale, child) => Transform.scale(scale: scale, child: child),
+        builder: (context, scale, child) =>
+            Transform.scale(scale: scale, child: child),
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
           decoration: BoxDecoration(
             color: const Color(0xFFFFD6E7),
             borderRadius: BorderRadius.circular(40),
-            boxShadow: [BoxShadow(color: Colors.pink.shade100, blurRadius: 6, offset: Offset(0, 2))],
+            boxShadow: [
+              BoxShadow(
+                  color: Colors.pink.shade100,
+                  blurRadius: 6,
+                  offset: Offset(0, 2))
+            ],
           ),
-          child: Text(text, style: TextStyle(color: Color(0xFFFF7DAE), fontWeight: FontWeight.w600, fontSize: 14)),
+          child: Text(text,
+              style: TextStyle(
+                  color: Color(0xFFFF7DAE),
+                  fontWeight: FontWeight.w600,
+                  fontSize: 14)),
         ),
       ),
     );
@@ -1373,9 +1910,20 @@ class _LovePageState extends State<LovePage> with TickerProviderStateMixin {
 
   void _sendRandomSuggestion() {
     final List<String> suggestions = [
-      "🍜 Ăn phở bò tái", "🍕 Pizza hải sản", "🥗 Salad trộn", "🍣 Sushi", "🥘 Lẩu thái",
-      "🎡 Công viên giải trí", "🎬 Rạp chiếu phim", "🛍️ Siêu thị mua sắm", "🏞️ Đi dạo hồ",
-      "🎁 Mua túi xách", "🧸 Gấu bông lớn", "💍 Vòng tay đôi", "🎨 Tranh tô màu", "💐 Hoa hồng đỏ",
+      "🍜 Ăn phở bò tái",
+      "🍕 Pizza hải sản",
+      "🥗 Salad trộn",
+      "🍣 Sushi",
+      "🥘 Lẩu thái",
+      "🎡 Công viên giải trí",
+      "🎬 Rạp chiếu phim",
+      "🛍️ Siêu thị mua sắm",
+      "🏞️ Đi dạo hồ",
+      "🎁 Mua túi xách",
+      "🧸 Gấu bông lớn",
+      "💍 Vòng tay đôi",
+      "🎨 Tranh tô màu",
+      "💐 Hoa hồng đỏ",
     ];
     final randomIndex = _rand.nextInt(suggestions.length);
     final suggestion = suggestions[randomIndex];
@@ -1394,39 +1942,58 @@ class _LovePageState extends State<LovePage> with TickerProviderStateMixin {
         children: [
           const Padding(
             padding: EdgeInsets.symmetric(vertical: 8),
-            child: Text("💬 Tin nhắn gần đây", style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFFFF7DAE))),
+            child: Text("💬 Tin nhắn gần đây",
+                style: TextStyle(
+                    fontWeight: FontWeight.bold, color: Color(0xFFFF7DAE))),
           ),
           Container(
             height: 320,
             child: StreamBuilder(
               stream: _dbRef.child('messages').limitToLast(20).onValue,
               builder: (ctx, snap) {
-                if (!snap.hasData || snap.data!.snapshot.value == null) return const Center(child: Text("Chưa có tin nhắn nào"));
-                final list = (snap.data!.snapshot.value as Map).values.toList()..sort((a,b)=>a['timestamp'].compareTo(b['timestamp']));
+                if (!snap.hasData || snap.data!.snapshot.value == null)
+                  return const Center(child: Text("Chưa có tin nhắn nào"));
+                final list = (snap.data!.snapshot.value as Map).values.toList()
+                  ..sort((a, b) => a['timestamp'].compareTo(b['timestamp']));
                 return ListView.builder(
                   controller: _scrollController,
                   itemCount: list.length,
-                  itemBuilder: (c,i) {
+                  itemBuilder: (c, i) {
                     final msg = list[i];
                     final me = msg['sender'] == _userName;
                     final timeStr = _formatTimestamp(msg['timestamp'] as int?);
                     return Align(
-                      alignment: me ? Alignment.centerRight : Alignment.centerLeft,
+                      alignment:
+                          me ? Alignment.centerRight : Alignment.centerLeft,
                       child: Container(
-                        margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 12),
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                        constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.7),
+                        margin: const EdgeInsets.symmetric(
+                            vertical: 4, horizontal: 12),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 12),
+                        constraints: BoxConstraints(
+                            maxWidth: MediaQuery.of(context).size.width * 0.7),
                         decoration: BoxDecoration(
                           color: me ? const Color(0xFFFFD6E7) : Colors.white,
                           borderRadius: BorderRadius.circular(24),
-                          boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 2, offset: Offset(0,1))],
+                          boxShadow: [
+                            BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.05),
+                                blurRadius: 2,
+                                offset: Offset(0, 1))
+                          ],
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                            Text(msg['text'], style: TextStyle(color: me ? Color(0xFFFF7DAE) : Colors.black87, fontSize: 14)),
+                            Text(msg['text'],
+                                style: TextStyle(
+                                    color:
+                                        me ? Color(0xFFFF7DAE) : Colors.black87,
+                                    fontSize: 14)),
                             const SizedBox(height: 2),
-                            Text(timeStr, style: TextStyle(fontSize: 10, color: Colors.grey.shade500)),
+                            Text(timeStr,
+                                style: TextStyle(
+                                    fontSize: 10, color: Colors.grey.shade500)),
                           ],
                         ),
                       ),
@@ -1446,10 +2013,13 @@ class _LovePageState extends State<LovePage> with TickerProviderStateMixin {
                     style: const TextStyle(fontSize: 14),
                     decoration: InputDecoration(
                       hintText: "Nhắn gì đó...",
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(30), borderSide: BorderSide.none),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30),
+                          borderSide: BorderSide.none),
                       filled: true,
                       fillColor: Colors.grey.shade100,
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 12),
                     ),
                     onSubmitted: (_) => _sendMsg(),
                   ),
@@ -1473,7 +2043,7 @@ class _LovePageState extends State<LovePage> with TickerProviderStateMixin {
   String _formatTimestamp(int? ts) {
     if (ts == null) return "";
     final d = DateTime.fromMillisecondsSinceEpoch(ts);
-    return "${d.hour}:${d.minute.toString().padLeft(2,'0')}";
+    return "${d.hour}:${d.minute.toString().padLeft(2, '0')}";
   }
 
   // -------------------- CÁC TAB --------------------
@@ -1491,10 +2061,15 @@ class _LovePageState extends State<LovePage> with TickerProviderStateMixin {
       padding: const EdgeInsets.all(16),
       child: Column(
         children: [
-          const Text("📸 Khoảnh khắc đẹp", style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Color(0xFFFF7DAE))),
+          const Text("📸 Khoảnh khắc đẹp",
+              style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFFFF7DAE))),
           const SizedBox(height: 16),
           Card(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
             child: Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
@@ -1509,7 +2084,9 @@ class _LovePageState extends State<LovePage> with TickerProviderStateMixin {
           const SizedBox(height: 16),
           ElevatedButton(
             onPressed: () => _showCalendarDialog(),
-            style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFFF7DAE), foregroundColor: Colors.white),
+            style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFFFF7DAE),
+                foregroundColor: Colors.white),
             child: const Text("Xem lịch sự kiện"),
           ),
           const SizedBox(height: 16),
@@ -1524,10 +2101,11 @@ class _LovePageState extends State<LovePage> with TickerProviderStateMixin {
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 itemCount: events.length,
-                itemBuilder: (ctx,i) => ListTile(
+                itemBuilder: (ctx, i) => ListTile(
                   leading: const Icon(Icons.event, color: Color(0xFFFF7DAE)),
                   title: Text(events[i]['title'] ?? ""),
-                  subtitle: Text(events[i]['datetime']?.toString().substring(0,16) ?? ""),
+                  subtitle: Text(
+                      events[i]['datetime']?.toString().substring(0, 16) ?? ""),
                 ),
               );
             },
@@ -1542,11 +2120,19 @@ class _LovePageState extends State<LovePage> with TickerProviderStateMixin {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Text("🤖 Trò chuyện với Mochi", style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Color(0xFFFF7DAE))),
+          const Text("🤖 Trò chuyện với Mochi",
+              style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFFFF7DAE))),
           const SizedBox(height: 20),
           ElevatedButton(
             onPressed: _showMochiDialog,
-            style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFFF7DAE), foregroundColor: Colors.white, padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12)),
+            style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFFFF7DAE),
+                foregroundColor: Colors.white,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 32, vertical: 12)),
             child: const Text("Mở hộp thoại Mochi"),
           ),
           const SizedBox(height: 30),
@@ -1556,7 +2142,8 @@ class _LovePageState extends State<LovePage> with TickerProviderStateMixin {
               padding: const EdgeInsets.all(16),
               child: Column(
                 children: [
-                  const Text("📌 Nhiệm vụ hôm nay", style: TextStyle(fontWeight: FontWeight.bold)),
+                  const Text("📌 Nhiệm vụ hôm nay",
+                      style: TextStyle(fontWeight: FontWeight.bold)),
                   const SizedBox(height: 8),
                   Text(_dailyMission, style: const TextStyle(fontSize: 16)),
                 ],
@@ -1576,15 +2163,24 @@ class _LovePageState extends State<LovePage> with TickerProviderStateMixin {
           children: [
             Row(
               children: [
-                ClipOval(child: Image.asset('assets/lulu.png', width: 46, height: 46)),
+                ClipOval(
+                    child:
+                        Image.asset('assets/lulu.png', width: 46, height: 46)),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: const [
-                      Text('LuLu AI Chat', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFFFF7DAE))),
+                      Text('LuLu AI Chat',
+                          style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFFFF7DAE))),
                       SizedBox(height: 4),
-                      Text('Nói chuyện với LuLu, bật nhạc, gợi ý món ăn, hoặc quậy quậy!', style: TextStyle(fontSize: 13, color: Colors.black54)),
+                      Text(
+                          'Nói chuyện với LuLu, bật nhạc, gợi ý món ăn, hoặc quậy quậy!',
+                          style:
+                              TextStyle(fontSize: 13, color: Colors.black54)),
                     ],
                   ),
                 ),
@@ -1594,34 +2190,67 @@ class _LovePageState extends State<LovePage> with TickerProviderStateMixin {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                ElevatedButton.icon(onPressed: _playPrev, icon: const Icon(Icons.skip_previous), label: const Text('Prev'), style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFFF7DAE))),
-                ElevatedButton.icon(onPressed: _pauseMusic, icon: const Icon(Icons.pause), label: const Text('Pause'), style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFFF7DAE))),
-                ElevatedButton.icon(onPressed: _stopMusic, icon: const Icon(Icons.stop), label: const Text('Stop'), style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFFF7DAE))),
-                ElevatedButton.icon(onPressed: _playNext, icon: const Icon(Icons.skip_next), label: const Text('Next'), style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFFF7DAE))),
+                ElevatedButton.icon(
+                    onPressed: _playPrev,
+                    icon: const Icon(Icons.skip_previous),
+                    label: const Text('Prev'),
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFFF7DAE))),
+                ElevatedButton.icon(
+                    onPressed: _pauseMusic,
+                    icon: const Icon(Icons.pause),
+                    label: const Text('Pause'),
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFFF7DAE))),
+                ElevatedButton.icon(
+                    onPressed: _stopMusic,
+                    icon: const Icon(Icons.stop),
+                    label: const Text('Stop'),
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFFF7DAE))),
+                ElevatedButton.icon(
+                    onPressed: _playNext,
+                    icon: const Icon(Icons.skip_next),
+                    label: const Text('Next'),
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFFF7DAE))),
               ],
             ),
             const SizedBox(height: 16),
             Expanded(
               child: Container(
                 padding: const EdgeInsets.all(14),
-                decoration: BoxDecoration(color: Colors.white.withOpacity(0.85), borderRadius: BorderRadius.circular(24)),
+                decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.85),
+                    borderRadius: BorderRadius.circular(24)),
                 child: _luluHistory.isEmpty
-                    ? const Center(child: Text('LuLu sẵn sàng trò chuyện nè!', style: TextStyle(color: Colors.black54)))
+                    ? const Center(
+                        child: Text('LuLu sẵn sàng trò chuyện nè!',
+                            style: TextStyle(color: Colors.black54)))
                     : ListView.builder(
                         itemCount: _luluHistory.length,
                         itemBuilder: (ctx, index) {
                           final item = _luluHistory[index];
                           final isUser = item['sender'] == 'Bạn';
                           return Align(
-                            alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
+                            alignment: isUser
+                                ? Alignment.centerRight
+                                : Alignment.centerLeft,
                             child: Container(
                               margin: const EdgeInsets.symmetric(vertical: 6),
-                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 12),
                               decoration: BoxDecoration(
-                                color: isUser ? const Color(0xFFFFD6E7) : const Color(0xFFF6F6F6),
+                                color: isUser
+                                    ? const Color(0xFFFFD6E7)
+                                    : const Color(0xFFF6F6F6),
                                 borderRadius: BorderRadius.circular(18),
                               ),
-                              child: Text(item['text'] ?? '', style: TextStyle(color: isUser ? const Color(0xFFFF7DAE) : Colors.black87)),
+                              child: Text(item['text'] ?? '',
+                                  style: TextStyle(
+                                      color: isUser
+                                          ? const Color(0xFFFF7DAE)
+                                          : Colors.black87)),
                             ),
                           );
                         },
@@ -1630,7 +2259,8 @@ class _LovePageState extends State<LovePage> with TickerProviderStateMixin {
             ),
             const SizedBox(height: 10),
             if (luluAI.memory.isNotEmpty)
-              Text('Ghi nhớ: ${luluAI.memory.values.take(6).join(" • ")}', style: const TextStyle(fontSize: 12, color: Colors.grey)),
+              Text('Ghi nhớ: ${luluAI.memory.values.take(6).join(" • ")}',
+                  style: const TextStyle(fontSize: 12, color: Colors.grey)),
             const SizedBox(height: 12),
             Row(
               children: [
@@ -1638,7 +2268,14 @@ class _LovePageState extends State<LovePage> with TickerProviderStateMixin {
                   child: TextField(
                     controller: _luluInputCtrl,
                     decoration: InputDecoration(
-                      hintText: 'Hỏi LuLu...', filled: true, fillColor: Colors.white, border: OutlineInputBorder(borderRadius: BorderRadius.circular(28), borderSide: BorderSide.none), contentPadding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+                      hintText: 'Hỏi LuLu...',
+                      filled: true,
+                      fillColor: Colors.white,
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(28),
+                          borderSide: BorderSide.none),
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 18, vertical: 14),
                     ),
                     onSubmitted: (value) {
                       if (value.trim().isEmpty) return;
@@ -1655,7 +2292,10 @@ class _LovePageState extends State<LovePage> with TickerProviderStateMixin {
                     _luluInputCtrl.clear();
                     _sendLuluMessage(value);
                   },
-                  style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFFF7DAE), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24))),
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFFFF7DAE),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(24))),
                   child: const Text('Gửi'),
                 ),
               ],
@@ -1680,8 +2320,10 @@ class _LovePageState extends State<LovePage> with TickerProviderStateMixin {
               setState(() => _waterReminderEnabled = v);
               final prefs = await SharedPreferences.getInstance();
               await prefs.setBool(_waterEnabledKey, v);
-              if (v) _scheduleWater();
-              else _waterReminderTimer?.cancel();
+              if (v)
+                _scheduleWater();
+              else
+                _waterReminderTimer?.cancel();
             },
           ),
         ),
@@ -1721,7 +2363,8 @@ class _LovePageState extends State<LovePage> with TickerProviderStateMixin {
           onTap: _showBeReminderDialog,
         ),
         ListTile(
-          leading: const Icon(Icons.sentiment_dissatisfied, color: Color(0xFFFF7DAE)),
+          leading: const Icon(Icons.sentiment_dissatisfied,
+              color: Color(0xFFFF7DAE)),
           title: const Text("Chỉnh ngày buồn"),
           onTap: _editSadDays,
         ),
@@ -1729,14 +2372,20 @@ class _LovePageState extends State<LovePage> with TickerProviderStateMixin {
           leading: const Icon(Icons.exit_to_app),
           title: const Text("Đăng xuất"),
           onTap: () async {
-            await _dbRef.child('presence').child(_userName).child('online').set(false);
+            await _dbRef
+                .child('presence')
+                .child(_userName)
+                .child('online')
+                .set(false);
             final prefs = await SharedPreferences.getInstance();
             await prefs.remove('user_name');
             if (mounted) _showNameDialog();
           },
         ),
         const SizedBox(height: 30),
-        const Center(child: Text("Love Station - Bé Ngoan", style: TextStyle(color: Colors.grey))),
+        const Center(
+            child: Text("Love Station - Bé Ngoan",
+                style: TextStyle(color: Colors.grey))),
       ],
     );
   }
@@ -1753,7 +2402,9 @@ class _LovePageState extends State<LovePage> with TickerProviderStateMixin {
             // Nền blur glass
             Container(
               decoration: BoxDecoration(
-                image: DecorationImage(image: AssetImage("assets/background.png"), fit: BoxFit.cover),
+                image: DecorationImage(
+                    image: AssetImage("assets/background.png"),
+                    fit: BoxFit.cover),
               ),
             ),
             Container(color: Colors.white.withValues(alpha: 0.2)),
@@ -1774,63 +2425,70 @@ class _LovePageState extends State<LovePage> with TickerProviderStateMixin {
             ),
             // Music player mini
             Positioned(
-              top: 8,
-              right: 8,
+              right: 16,
+              bottom: 90,
+              child: _buildMusicPlayerButton(context),
+            ),
+            // LuLu quick-open button (tràn viền icon)
+            Positioned(
+              bottom: 16,
+              left: 16,
               child: GestureDetector(
-                onTap: () {
-                  if (_currentSongIndex == -1) _playRandomSong();
-                  else _pauseResume();
-                },
+                onTap: _showLuluChat,
                 child: Container(
-                  width: 44,
-                  height: 44,
-                  decoration: BoxDecoration(color: Colors.white, shape: BoxShape.circle, boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 4)]),
-                  child: Icon(_isPlaying ? Icons.pause : Icons.play_arrow, color: Color(0xFFFF7DAE)),
+                  width: 56,
+                  height: 56,
+                  decoration: const BoxDecoration(shape: BoxShape.circle),
+                  child: ClipOval(
+                    child: Image.asset('assets/lulu.png',
+                        fit: BoxFit.cover, width: 56, height: 56),
+                  ),
                 ),
               ),
             ),
-                    // LuLu quick-open button (tràn viền icon)
-                    Positioned(
-                      bottom: 16,
-                      left: 16,
-                      child: GestureDetector(
-                        onTap: _showLuluChat,
-                        child: Container(
-                          width: 56,
-                          height: 56,
-                          decoration: const BoxDecoration(shape: BoxShape.circle),
-                          child: ClipOval(
-                            child: Image.asset('assets/lulu.png', fit: BoxFit.cover, width: 56, height: 56),
-                          ),
-                        ),
-                      ),
-                    ),
             // Bubbles
             ...bubbles.map((b) => Positioned(
-              left: b.position.dx,
-              top: b.position.dy,
-              child: TweenAnimationBuilder<double>(
-                tween: Tween(begin: 0.0, end: -MediaQuery.of(context).size.height - 100),
-                duration: const Duration(seconds: 8),
-                builder: (ctx, val, _) => Transform.translate(
-                  offset: Offset(0, val),
-                  child: Opacity(opacity: (1 - (-val / MediaQuery.of(context).size.height)).clamp(0.0, 1.0), child: Text(b.emoji, style: const TextStyle(fontSize: 28))),
-                ),
-              ),
-            )),
+                  left: b.position.dx,
+                  top: b.position.dy,
+                  child: TweenAnimationBuilder<double>(
+                    tween: Tween(
+                        begin: 0.0,
+                        end: -MediaQuery.of(context).size.height - 100),
+                    duration: const Duration(seconds: 8),
+                    builder: (ctx, val, _) => Transform.translate(
+                      offset: Offset(0, val),
+                      child: Opacity(
+                          opacity:
+                              (1 - (-val / MediaQuery.of(context).size.height))
+                                  .clamp(0.0, 1.0),
+                          child: Text(b.emoji,
+                              style: const TextStyle(fontSize: 28))),
+                    ),
+                  ),
+                )),
             // Action bubble
             if (_showBubble)
               Positioned(
                 top: 120,
-                left: 0, right: 0,
+                left: 0,
+                right: 0,
                 child: Center(
                   child: Container(
                     padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(color: Color(0xFFFF7DAE), borderRadius: BorderRadius.circular(30)),
+                    decoration: BoxDecoration(
+                        color: Color(0xFFFF7DAE),
+                        borderRadius: BorderRadius.circular(30)),
                     child: Row(mainAxisSize: MainAxisSize.min, children: [
-                      Image.asset('assets/$_bubbleImage', width: 30, height: 30, errorBuilder: (c,e,s) => Text(_bubbleEmoji, style: const TextStyle(fontSize: 24))),
+                      Image.asset('assets/$_bubbleImage',
+                          width: 30,
+                          height: 30,
+                          errorBuilder: (c, e, s) => Text(_bubbleEmoji,
+                              style: const TextStyle(fontSize: 24))),
                       const SizedBox(width: 8),
-                      Text("$_bubbleText $_bubbleEmoji", style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w500)),
+                      Text("$_bubbleText $_bubbleEmoji",
+                          style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w500)),
                     ]),
                   ),
                 ),
@@ -1858,7 +2516,8 @@ class _LovePageState extends State<LovePage> with TickerProviderStateMixin {
           BottomNavigationBarItem(icon: Icon(Icons.memory), label: "Memories"),
           BottomNavigationBarItem(icon: Icon(Icons.smart_toy), label: "Mochi"),
           BottomNavigationBarItem(icon: Icon(Icons.chat_bubble), label: "LuLu"),
-          BottomNavigationBarItem(icon: Icon(Icons.settings), label: "Settings"),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.settings), label: "Settings"),
         ],
       ),
     );
